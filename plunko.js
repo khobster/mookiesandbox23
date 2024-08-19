@@ -394,7 +394,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function displayPlayerFromDecade(decade) {
     const playersFromDecade = playersData.filter(player => {
-        const playerDecade = Math.floor(player.retirement_year / 10) * 10;
+        let playerYear = player.retirement_year;
+
+        // Adjust for players who retired after 2000 (assuming years are in two-digit format)
+        if (playerYear < 100) {
+            playerYear += 2000; // Convert '1' to '2001', '24' to '2024', etc.
+        }
+
+        const playerDecade = Math.floor(playerYear / 10) * 10; // Calculate the player's retirement decade
         return `${playerDecade}s` === decade;
     });
 
