@@ -116,13 +116,13 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 20px; /* Increase the margin top */
+    margin-top: 10px; /* Reduce this value to bring the buttons closer */
     width: 100%;
-    flex-wrap: wrap; /* Allow the buttons to wrap on smaller screens */
+    flex-wrap: wrap;
 }
 
-#splitItBtn {
-    background-color: #F0E68C; /* Off-white color like a piano key */
+#splitItBtn, #goFishBtn {
+    background-color: #F0E68C; /* Split It */
     color: black;
     text-transform: uppercase;
     border: none;
@@ -133,7 +133,8 @@
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
     width: 48%; /* Make buttons narrower to avoid overlap */
-    flex: 1; /* Make the button expand to fill the available space */
+    flex: 1;
+    margin-top: 0; /* Reset margin-top to move buttons closer */
 }
 
 #splitItBtn:hover {
