@@ -9,6 +9,7 @@
     margin: 0 auto;
     padding: 20px;
     position: relative;
+    padding-bottom: 100px; /* Add padding at the bottom to avoid overlap */
 }
 
 .title-container h1 {
@@ -21,7 +22,7 @@
 .tooltip {
     display: inline-block;
     position: fixed; /* Change to fixed for positioning at the bottom */
-    bottom: 20px; /* Position at the bottom of the screen */
+    bottom: 50px; /* Adjust this value to give more space */
     left: 50%;
     transform: translateX(-50%);
     cursor: pointer;
@@ -32,6 +33,7 @@
     border-radius: 12px; /* Adjust border radius for a more rounded look */
     color: white;
     white-space: nowrap; /* Prevent text from wrapping */
+    z-index: 1001; /* Ensure it is above other elements */
 }
 
 .tooltip .tooltiptext {
@@ -102,6 +104,7 @@
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
     margin-bottom: 10px;
+    margin-top: 20px; /* Add margin to separate from input fields */
     width: 100%; /* Make the main button span the full width */
 }
 
@@ -113,8 +116,9 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 10px;
+    margin-top: 20px; /* Increase the margin top */
     width: 100%;
+    flex-wrap: wrap; /* Allow the buttons to wrap on smaller screens */
 }
 
 #splitItBtn {
@@ -128,7 +132,7 @@
     border-radius: 4px;
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
-    width: 45%;
+    width: 48%; /* Make buttons narrower to avoid overlap */
     flex: 1; /* Make the button expand to fill the available space */
 }
 
@@ -147,7 +151,7 @@
     border-radius: 4px;
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
-    width: 45%;
+    width: 48%; /* Make buttons narrower to avoid overlap */
     flex: 1; /* Make the button expand to fill the available space */
 }
 
@@ -173,7 +177,7 @@
 }
 
 #result {
-    margin-top: 10px;
+    margin-top: 15px; /* Add more space above the result text */
     padding: 10px;
     color: white;
     text-align: center;
@@ -235,7 +239,7 @@
     font-size: 14px;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 5px;
+    margin-top: 10px; /* Add more space above the buttons */
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
     display: none; /* Initially hidden */
