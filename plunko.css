@@ -82,7 +82,7 @@
     position: relative;
 }
 
-#submitBtn, #feelingLuckyBtn, #goFishBtn {
+#submitBtn {
     background-color: #00b0a9; /* Update button color */
     color: #f8f8f8;
     text-transform: uppercase;
@@ -97,8 +97,53 @@
     margin: 10px auto;
 }
 
-#submitBtn:hover, #feelingLuckyBtn:hover, #goFishBtn:hover {
+#submitBtn:hover {
     background-color: #008f8a; /* Slightly darker shade for hover */
+}
+
+#buttonRow {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#feelingLuckyBtn {
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    color: white;
+    text-transform: uppercase;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-family: 'Archivo Narrow', sans-serif;
+    display: block;
+    width: 50%; /* Ensure it takes up half the width in the row */
+}
+
+#feelingLuckyBtn:hover {
+    background: linear-gradient(90deg, violet, indigo, blue, green, yellow, orange, red); /* Reverse the gradient on hover */
+}
+
+#goFishBtn {
+    background-color: #1E90FF; /* Ocean blue color */
+    color: white;
+    text-transform: uppercase;
+    border: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-family: 'Archivo Narrow', sans-serif;
+    display: block;
+    width: 50%; /* Ensure it takes up half the width in the row */
+}
+
+#goFishBtn:hover {
+    background-color: #1C86EE; /* Darker shade on hover */
 }
 
 #result {
@@ -146,125 +191,4 @@
 #shareSnippet {
     margin-top: 10px;
     padding: 10px;
-    color: #333;
-    font-size: 14px;
-    text-align: center;
-    border: 1px solid #4CAF50;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
-}
-
-#copyButton, #returnButton, #proofButton {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 5px;
-    transition: background-color 0.3s;
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
-}
-
-#copyButton:hover, #returnButton:hover, #proofButton:hover {
-    background-color: #45a049;
-}
-
-/* Added to align buttons side by side */
-#buttonContainer {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-
-#suggestions {
-    position: absolute;
-    background-color: white;
-    border: 1px solid #ddd;
-    max-height: 150px;
-    overflow-y: auto;
-    width: 90%;
-    z-index: 1000;
-    margin-top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Archivo Narrow', sans-serif;
-    font-size: 14px;
-}
-
-.suggestion-item {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.suggestion-item:hover {
-    background-color: #f0f0f0;
-}
-
-@media only screen and (max-width: 600px) {
-    #app {
-        font-size: 16px;
-    }
-    .game-image {
-        width: 100%;
-        max-width: 400px;
-    }
-}
-
-@keyframes blinkRainbow {
-    0% {background-color: red;}
-    20% {background-color: orange;}
-    40% {background-color: yellow;}
-    60% {background-color: green;}
-    80% {background-color: blue;}
-    100% {background-color: violet;}
-}
-
-.kaboom {
-    font-size: 24px;
-    font-family: 'Anton', sans-serif;
-    color: white;
-    background-color: rainbow;
-    animation: kaboomEffect 2s infinite;
-}
-
-@keyframes kaboomEffect {
-    0% {transform: scale(1);}
-    50% {transform: scale(1.2);}
-    100% {transform: scale(1);}
-}
-
-#snippetMessage {
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
-}
-
-#proofButton {
-    background-color: red;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    font-size: 14px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 5px;
-    transition: background-color 0.3s;
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
-}
-
-#proofButton:hover {
-    background-color: darkred;
-}
-
-/* Added CSS for the logo */
-.logo {
-    width: 100%; /* Adjust the width as needed */
-    max-width: 300px; /* Adjust the max width as needed */
-    height: auto; /* Maintain aspect ratio */
-    margin: 0 auto; /* Center the logo */
-}
+    color: #333
