@@ -252,10 +252,15 @@ function displayRandomPlayer() {
 }
 
 function displayPlayer(player) {
-    document.getElementById('playerName').textContent = player.name;
-    document.getElementById('collegeGuess').value = '';
-    document.getElementById('result').textContent = '';
-    document.getElementById('result').className = '';
+    const playerNameElement = document.getElementById('playerName');
+    if (playerNameElement) {
+        playerNameElement.textContent = player.name;
+        document.getElementById('collegeGuess').value = '';
+        document.getElementById('result').textContent = '';
+        document.getElementById('result').className = '';
+    } else {
+        console.error("Player name element not found");
+    }
 }
 
 function startURLChallenge(playerNames) {
