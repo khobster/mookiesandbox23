@@ -1,2 +1,2 @@
-# mookiesandbox23
-trying new stuff out with MOOKIE
+# mookiesandbox
+a trivia game for basketball junkies and/or nerds
