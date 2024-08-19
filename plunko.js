@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        if (!tooltip.contains(e.target)) {
+        if (!tooltip contains(e.target)) {
             tooltip.classList.remove('active');
         }
     });
@@ -407,6 +407,8 @@ function displayPlayerFromDecade(decade) {
         }
 
         const playerDecade = Math.floor(playerYear / 10) * 10; // Calculate the player's retirement decade
+        console.log(`Player: ${player.name}, Retirement Year: ${playerYear}, Decade: ${playerDecade}s`);
+
         return `${playerDecade}s` === decade;
     });
 
