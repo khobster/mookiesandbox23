@@ -358,10 +358,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('splitItBtn').addEventListener('click', () => {
+        if (isTwoForOneActive) {
+            // If they are already in 2-for-1 mode, do nothing
+            return;
+        }
         document.getElementById('playingTwoForOne').style.display = 'inline';
         document.getElementById('playingTwoForOne').textContent = 'playing 2 for 1 now';
         isTwoForOneActive = true;
         twoForOneCounter = 0;
+        document.getElementById('splitItBtn').disabled = true; // Disable the button
+        document.getElementById('splitItBtn').classList.add('disabled'); // Add a class to gray it out
         displayRandomPlayer(); // Skip the current question
     });
 
@@ -409,7 +415,7 @@ function displayPlayerFromDecade(decade) {
             playerDecade = '1960s';
         } else if (playerYear >= 70 && playerYear <= 79) {
             playerDecade = '1970s';
-        } else if (playerYear >= 80 && playerYear <= 89) {
+        } else if (playerYear >= 80 and playerYear <= 89) {
             playerDecade = '1980s';
         } else if (playerYear >= 90 && playerYear <= 99) {
             playerDecade = '1990s';
@@ -451,12 +457,16 @@ function handleTwoForOne(isCorrect) {
         } else if (twoForOneCounter >= 2) {
             isTwoForOneActive = false;
             document.getElementById('playingTwoForOne').style.display = 'none';
+            document.getElementById('splitItBtn').disabled = false; // Re-enable the button after 2-for-1 is done
+            document.getElementById('splitItBtn').classList.remove('disabled'); // Remove the disabled class
             return true; // Consider as one correct answer
         }
     } else {
         isTwoForOneActive = false;
         twoForOneCounter = 0;
         document.getElementById('playingTwoForOne').style.display = 'none';
+        document.getElementById('splitItBtn').disabled = false; // Re-enable the button if the user gets it wrong
+        document.getElementById('splitItBtn').classList.remove('disabled'); // Remove the disabled class
     }
     return false; // Not yet two correct answers
 }
