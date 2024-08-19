@@ -116,7 +116,7 @@
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-top: 7px; /* Reduce this value to bring the buttons closer */
+    margin-top: 4px; /* Reduce this value to bring the buttons closer */
     width: 100%;
     flex-wrap: wrap;
 }
