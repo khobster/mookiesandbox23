@@ -75,6 +75,7 @@
     font-size: 12px;
     font-family: 'Archivo Narrow', sans-serif;
     color: #4CAF50;
+    display: none; /* Initially hidden */
 }
 
 #collegeGuess {
