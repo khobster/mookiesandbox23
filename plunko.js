@@ -5,6 +5,8 @@ let correctStreakURL = 0;
 let lastThreeCorrectURL = [];
 let currentDifficultyLevel = 1;
 let cumulativeRarityScore = 0;
+let isTwoForOneActive = false;
+let twoForOneCounter = 0;
 
 const correctSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/bing-bong.mp3');
 const wrongSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/incorrect-answer-for-plunko.mp3');
@@ -235,7 +237,6 @@ function displayRandomPlayer() {
         document.getElementById('collegeGuess').value = '';
         document.getElementById('result').textContent = '';
         document.getElementById('result').className = '';
-        return player;
     } else {
         console.log("No data available");
     }
@@ -342,69 +343,29 @@ document.addEventListener('DOMContentLoaded', () => {
         showSuggestions(e.target.value);
     });
 
+    document.getElementById('splitItBtn').addEventListener('click', () => {
+        document.getElementById('playingTwoForOne').style.display = 'inline';
+        document.getElementById('playingTwoForOne').textContent = 'playing 2 for 1 now';
+        isTwoForOneActive = true;
+        twoForOneCounter = 0;
+        displayRandomPlayer(); // Skip the current question
+    });
+
+    document.getElementById('goFishBtn').addEventListener('click', () => {
+        document.getElementById('decadeDropdownContainer').style.display = 'block';
+    });
+
+    document.getElementById('decadeDropdown').addEventListener('change', (e) => {
+        const selectedDecade = e.target.value;
+        if (selectedDecade) {
+            displayPlayerFromDecade(selectedDecade);
+        }
+    });
+
     document.getElementById('copyButton').addEventListener('click', copyToClipboard);
     document.getElementById('proofButton').addEventListener('click', copyToClipboard); // Add event listener for proof button
     document.getElementById('returnButton').addEventListener('click', () => {
         window.location.href = 'https://www.mookie.click';
-    });
-
-    document.getElementById('feelingLuckyBtn').addEventListener('click', () => {
-        let firstPlayer = displayRandomPlayer(); // Picks a player according to the current difficulty level
-        let secondPlayer = displayRandomPlayer(); // Picks another player according to the current difficulty level
-
-        // Create a temporary streak count for "Feeling Lucky"
-        let tempStreak = 0;
-
-        function checkSecondQuestion() {
-            const userGuess2 = document.getElementById('collegeGuess').value.trim().toLowerCase();
-            let isCorrect2 = secondPlayer && isCloseMatch(userGuess2, secondPlayer.college || 'No College');
-
-            if (isCorrect2) {
-                tempStreak++;
-                if (tempStreak === 2) {
-                    correctStreakStandard++;
-                    updateBucketScore();
-                    displayRandomPlayer();
-                }
-            } else {
-                tempStreak = 0;
-                document.getElementById('result').innerHTML = 'Wrong answer. Try again!';
-                wrongSound.play();
-            }
-        }
-
-        function checkFirstQuestion() {
-            const userGuess1 = document.getElementById('collegeGuess').value.trim().toLowerCase();
-            let isCorrect1 = firstPlayer && isCloseMatch(userGuess1, firstPlayer.college || 'No College');
-
-            if (isCorrect1) {
-                tempStreak++;
-                displayNextQuestion(checkSecondQuestion);
-            } else {
-                tempStreak = 0;
-                document.getElementById('result').innerHTML = 'Wrong answer. Try again!';
-                wrongSound.play();
-            }
-        }
-
-        checkFirstQuestion();
-    });
-
-    document.getElementById('goFishBtn').addEventListener('click', () => {
-        let decade = prompt("Choose a decade (1950s, 1960s, 1970s, etc.):");
-        decade = parseInt(decade, 10); // Convert to number
-
-        let playersFromDecade = playersData.filter(player => {
-            return Math.floor(player.retirement_year / 10) * 10 === decade && player.rarity_score <= currentDifficultyLevel;
-        });
-
-        if (playersFromDecade.length > 0) {
-            const selectedPlayer = playersFromDecade[Math.floor(Math.random() * playersFromDecade.length)];
-            displayPlayer(selectedPlayer);
-        } else {
-            document.getElementById('result').innerHTML = `No players found for the ${decade}s. Go fish!`;
-            displayRandomPlayer();
-        }
     });
 
     // Tooltip handling for mobile
@@ -421,11 +382,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function updateBucketScore() {
-    document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
+function displayPlayerFromDecade(decade) {
+    const playersFromDecade = playersData.filter(player => {
+        const playerDecade = Math.floor(player.retirement_year / 10) * 10;
+        return `${playerDecade}s` === decade;
+    });
 
-    // Allow sharing of the bucket score
-    const shareText = `Check out my Bucket Score in MOOKIE: ${Math.round(cumulativeRarityScore)}! ${window.location.href}`;
-    document.getElementById('copyButton').setAttribute('data-snippet', shareText);
-    document.getElementById('copyButton').style.display = 'inline-block';
+    if (playersFromDecade.length > 0) {
+        const randomIndex = Math.floor(Math.random() * playersFromDecade.length);
+        const player = playersFromDecade[randomIndex];
+        displayPlayer(player);
+        document.getElementById('decadeDropdownContainer').style.display = 'none'; // Hide dropdown after selection
+    } else {
+        console.log(`No players found for the ${decade}`);
+    }
+}
+
+function handleTwoForOne(isCorrect) {
+    if (isCorrect) {
+        twoForOneCounter++;
+        if (twoForOneCounter >= 2) {
+            isTwoForOneActive = false;
+            document.getElementById('playingTwoForOne').style.display = 'none';
+            return true; // Consider as one correct answer
+        }
+    } else {
+        isTwoForOneActive = false;
+        twoForOneCounter = 0;
+        document.getElementById('playingTwoForOne').style.display = 'none';
+    }
+    return false; // Not yet two correct answers
 }
