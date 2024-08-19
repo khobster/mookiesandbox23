@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        if (!tooltip contains(e.target)) {
+        if (!tooltip.contains(e.target)) {
             tooltip.classList.remove('active');
         }
     });
@@ -401,15 +401,29 @@ function displayPlayerFromDecade(decade) {
     const playersFromDecade = playersData.filter(player => {
         let playerYear = player.retirement_year;
 
-        // Adjust for players who retired after 2000 (assuming years are in two-digit format)
-        if (playerYear < 100) {
-            playerYear += 2000; // Convert '1' to '2001', '24' to '2024', etc.
+        // Determine the decade based on the retirement year
+        let playerDecade;
+        if (playerYear >= 50 && playerYear <= 59) {
+            playerDecade = '1950s';
+        } else if (playerYear >= 60 && playerYear <= 69) {
+            playerDecade = '1960s';
+        } else if (playerYear >= 70 && playerYear <= 79) {
+            playerDecade = '1970s';
+        } else if (playerYear >= 80 && playerYear <= 89) {
+            playerDecade = '1980s';
+        } else if (playerYear >= 90 && playerYear <= 99) {
+            playerDecade = '1990s';
+        } else if (playerYear >= 0 && playerYear <= 9) {
+            playerDecade = '2000s';
+        } else if (playerYear >= 10 && playerYear <= 19) {
+            playerDecade = '2010s';
+        } else if (playerYear >= 20 && playerYear <= 29) {
+            playerDecade = '2020s';
         }
 
-        const playerDecade = Math.floor(playerYear / 10) * 10; // Calculate the player's retirement decade
-        console.log(`Player: ${player.name}, Retirement Year: ${playerYear}, Decade: ${playerDecade}s`);
+        console.log(`Player: ${player.name}, Retirement Year: ${playerYear}, Decade: ${playerDecade}`);
 
-        return `${playerDecade}s` === decade;
+        return playerDecade === decade;
     });
 
     if (playersFromDecade.length > 0) {
