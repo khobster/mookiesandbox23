@@ -52,47 +52,59 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
     const player = playersData.find(p => p.name === playerName);
 
     if (isCorrect && player) {
-        correctStreakStandard++;
-        lastThreeCorrectStandard.push(playerName);
-        cumulativeRarityScore += player.rarity_score;
+        if (isTwoForOneActive) {
+            isCorrect = handleTwoForOne(true);
+        }
 
-        if (lastThreeCorrectStandard.length > 3) {
-            lastThreeCorrectStandard.shift();
+        if (!isTwoForOneActive || isCorrect) {
+            correctStreakStandard++;
+            lastThreeCorrectStandard.push(playerName);
+            cumulativeRarityScore += player.rarity_score;
+
+            if (lastThreeCorrectStandard.length > 3) {
+                lastThreeCorrectStandard.shift();
+            }
+            if (correctStreakStandard === 1) {
+                resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just two more to get this <span class='kaboom'>MOOoooOOKIE!</span>";
+            } else if (correctStreakStandard === 2) {
+                resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just one more to get a <span class='kaboom'>MOOoooOOKIE!</span>";
+            } else if (correctStreakStandard === 3) {
+                resultElement.innerHTML = "<span class='kaboom'>MOOoooooOOOOKIE!</span>";
+                const encodedPlayers = encodeURIComponent(lastThreeCorrectStandard.join(','));
+                const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
+                const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
+                let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
+                document.getElementById('shareSnippet').innerHTML = shareText;
+                document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
+                document.getElementById('snippetMessage').style.display = 'block'; // Show the message
+                document.getElementById('shareSnippet').style.display = 'block'; // Show the share snippet
+                document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
+                document.getElementById('copyButton').style.display = 'inline-block';
+                increaseDifficulty();
+                correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
+                lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
+            }
+            document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
+            resultElement.className = 'correct';
+            correctSound.play();
         }
-        if (correctStreakStandard === 1) {
-            resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just two more to get this <span class='kaboom'>MOOoooOOKIE!</span>";
-        } else if (correctStreakStandard === 2) {
-            resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just one more to get a <span class='kaboom'>MOOoooOOKIE!</span>";
-        } else if (correctStreakStandard === 3) {
-            resultElement.innerHTML = "<span class='kaboom'>MOOoooooOOOOKIE!</span>";
-            const encodedPlayers = encodeURIComponent(lastThreeCorrectStandard.join(','));
-            const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
-            const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
-            let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
-            document.getElementById('shareSnippet').innerHTML = shareText;
-            document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
-            document.getElementById('snippetMessage').style.display = 'block'; // Show the message
-            document.getElementById('shareSnippet').style.display = 'block'; // Show the share snippet
-            document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-            document.getElementById('copyButton').style.display = 'inline-block';
-            increaseDifficulty();
-            correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
-            lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
-        }
-        document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
-        resultElement.className = 'correct';
-        correctSound.play();
     } else {
-        correctStreakStandard = 0;
-        lastThreeCorrectStandard = [];
-        cumulativeRarityScore = 0; // Reset the cumulative rarity score when the streak is broken
-        document.getElementById('plunkosCount').textContent = '0'; // Update the display
-        resultElement.textContent = 'Wrong answer. Try again!';
-        resultElement.className = 'incorrect';
-        document.getElementById('snippetMessage').style.display = 'none';
-        document.getElementById('shareSnippet').style.display = 'none';
-        document.getElementById('copyButton').style.display = 'none';
-        wrongSound.play();
+        if (isTwoForOneActive) {
+            isCorrect = handleTwoForOne(false);
+        }
+
+        if (!isTwoForOneActive || !isCorrect) {
+            correctStreakStandard = 0;
+            lastThreeCorrectStandard = [];
+            cumulativeRarityScore = 0; // Reset the cumulative rarity score when the streak is broken
+            document.getElementById('plunkosCount').textContent = '0'; // Update the display
+            resultElement.textContent = 'Wrong answer. Try again!';
+            resultElement.className = 'incorrect';
+            document.getElementById('snippetMessage').style.display = 'none';
+            document.getElementById('shareSnippet').style.display = 'none';
+            document.getElementById('copyButton').style.display = 'none';
+            wrongSound.play();
+        }
     }
     setTimeout(nextPlayerCallback, 3000); // Show next player after a delay
 }
@@ -233,10 +245,7 @@ function displayRandomPlayer() {
     if (playersData.length > 0) {
         const randomIndex = Math.floor(Math.random() * playersData.length);
         const player = playersData[randomIndex];
-        document.getElementById('playerName').textContent = player.name;
-        document.getElementById('collegeGuess').value = '';
-        document.getElementById('result').textContent = '';
-        document.getElementById('result').className = '';
+        displayPlayer(player);
     } else {
         console.log("No data available");
     }
@@ -358,7 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('decadeDropdown').addEventListener('change', (e) => {
         const selectedDecade = e.target.value;
         if (selectedDecade) {
-            displayPlayerFromDecade(selectedDecade);
+            displayPlayerFromDecade(selectedDecade); // Display a new player based on the selected decade
+            document.getElementById('decadeDropdownContainer').style.display = 'none'; // Hide dropdown after selection
         }
     });
 
@@ -392,9 +402,9 @@ function displayPlayerFromDecade(decade) {
         const randomIndex = Math.floor(Math.random() * playersFromDecade.length);
         const player = playersFromDecade[randomIndex];
         displayPlayer(player);
-        document.getElementById('decadeDropdownContainer').style.display = 'none'; // Hide dropdown after selection
     } else {
         console.log(`No players found for the ${decade}`);
+        document.getElementById('playerQuestion').textContent = `No players found for the ${decade}`;
     }
 }
 
