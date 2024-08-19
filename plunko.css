@@ -82,7 +82,7 @@
     position: relative;
 }
 
-#submitBtn {
+#submitBtn, #feelingLuckyBtn, #goFishBtn {
     background-color: #00b0a9; /* Update button color */
     color: #f8f8f8;
     text-transform: uppercase;
@@ -97,7 +97,7 @@
     margin: 10px auto;
 }
 
-#submitBtn:hover {
+#submitBtn:hover, #feelingLuckyBtn:hover, #goFishBtn:hover {
     background-color: #008f8a; /* Slightly darker shade for hover */
 }
 
@@ -112,11 +112,11 @@
 }
 
 #plunkosCounter {
-    font-size: 24px;
-    font-family: 'Lilita One', cursive; /* Change to Lilita One */
-    margin-top: 10px;
+    font-size: 36px; /* Increase the font size */
+    font-family: 'Lilita One', cursive;
     color: #4CAF50;
     animation: rainbow 2s infinite;
+    margin-top: 20px; /* Add space above */
 }
 
 @keyframes rainbow {
@@ -156,7 +156,7 @@
     display: none; /* Initially hidden */
 }
 
-#copyButton, #returnButton {
+#copyButton, #returnButton, #proofButton {
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -170,7 +170,7 @@
     display: none; /* Initially hidden */
 }
 
-#copyButton:hover, #returnButton:hover {
+#copyButton:hover, #returnButton:hover, #proofButton:hover {
     background-color: #45a049;
 }
 
