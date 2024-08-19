@@ -439,7 +439,16 @@ function displayPlayerFromDecade(decade) {
 function handleTwoForOne(isCorrect) {
     if (isCorrect) {
         twoForOneCounter++;
-        if (twoForOneCounter >= 2) {
+        if (twoForOneCounter === 1) {
+            document.getElementById('result').textContent = "Got it!";
+            document.getElementById('result').className = 'correct';
+            correctSound.play();
+            setTimeout(() => {
+                document.getElementById('result').textContent = ''; // Clear the message after a delay
+                displayRandomPlayer(); // Move to the next player
+            }, 2000); // Adjust the delay as needed
+            return false; // Return false to prevent continuing the two-for-one streak immediately
+        } else if (twoForOneCounter >= 2) {
             isTwoForOneActive = false;
             document.getElementById('playingTwoForOne').style.display = 'none';
             return true; // Consider as one correct answer
