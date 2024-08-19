@@ -61,10 +61,15 @@
     opacity: 1;
 }
 
+#questionContainer {
+    text-align: center;
+    margin-bottom: 10px; /* Adjust this for spacing between question and input */
+}
+
 #playerQuestion {
     font-size: 18px;
     font-family: 'Archivo Narrow', sans-serif;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Adjust spacing below the question */
 }
 
 #playerName {
@@ -73,11 +78,12 @@
 }
 
 .playingTwoForOne {
-    margin-left: 10px;
-    font-size: 12px;
+    font-size: 14px;
     font-family: 'Archivo Narrow', sans-serif;
     color: #4CAF50;
     display: none; /* Initially hidden */
+    text-align: center; /* Center align the message */
+    margin-top: 5px; /* Adjust this for spacing between question and message */
 }
 
 #collegeGuess {
