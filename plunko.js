@@ -437,12 +437,21 @@ function displayPlayerFromDecade(decade) {
 }
 
 function handleTwoForOne(isCorrect) {
+    const resultElement = document.getElementById('result');
     if (isCorrect) {
         twoForOneCounter++;
-        if (twoForOneCounter >= 2) {
+        if (twoForOneCounter < 2) {
+            resultElement.innerHTML = "Got it!";
+            resultElement.className = 'correct';
+            setTimeout(() => {
+                resultElement.innerHTML = ''; // Clear the message after a short delay
+                displayRandomPlayer(); // Show the next question
+            }, 1500); // Adjust the delay as needed
+            return false; // Not yet considered as one correct answer
+        } else {
             isTwoForOneActive = false;
             document.getElementById('playingTwoForOne').style.display = 'none';
-            return true; // Consider as one correct answer
+            return true; // Consider as one correct answer after getting two in a row
         }
     } else {
         isTwoForOneActive = false;
