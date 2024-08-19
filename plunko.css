@@ -70,6 +70,13 @@
     font-size: 22px;
 }
 
+.playingTwoForOne {
+    margin-left: 10px;
+    font-size: 12px;
+    font-family: 'Archivo Narrow', sans-serif;
+    color: #4CAF50;
+}
+
 #collegeGuess {
     width: 90%;
     padding: 8px;
@@ -109,9 +116,9 @@
     width: 100%;
 }
 
-#feelingLuckyBtn {
-    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-    color: white;
+#splitItBtn {
+    background-color: #F0E68C; /* Off-white color like a piano key */
+    color: black;
     text-transform: uppercase;
     border: none;
     padding: 8px 12px;
@@ -120,12 +127,12 @@
     border-radius: 4px;
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
-    width: 45%; /* Adjust width for better fit */
+    width: 45%;
     flex: 1; /* Make the button expand to fill the available space */
 }
 
-#feelingLuckyBtn:hover {
-    background: linear-gradient(90deg, violet, indigo, blue, green, yellow, orange, red); /* Reverse the gradient on hover */
+#splitItBtn:hover {
+    background-color: #E5D85C; /* Slightly darker off-white on hover */
 }
 
 #goFishBtn {
@@ -139,12 +146,29 @@
     border-radius: 4px;
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
-    width: 45%; /* Adjust width for better fit */
+    width: 45%;
     flex: 1; /* Make the button expand to fill the available space */
+}
+
+#goFishBtn .fishIcon {
+    font-size: 20px; /* Increase the size of the fish icon */
 }
 
 #goFishBtn:hover {
     background-color: #1C86EE; /* Darker shade on hover */
+}
+
+#decadeDropdownContainer {
+    margin-top: 10px;
+}
+
+#decadeDropdown {
+    width: 100%;
+    padding: 8px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: 'Archivo Narrow', sans-serif;
 }
 
 #result {
