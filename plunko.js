@@ -235,6 +235,7 @@ function displayRandomPlayer() {
         document.getElementById('collegeGuess').value = '';
         document.getElementById('result').textContent = '';
         document.getElementById('result').className = '';
+        return player;
     } else {
         console.log("No data available");
     }
@@ -347,6 +348,65 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'https://www.mookie.click';
     });
 
+    document.getElementById('feelingLuckyBtn').addEventListener('click', () => {
+        let firstPlayer = displayRandomPlayer(); // Picks a player according to the current difficulty level
+        let secondPlayer = displayRandomPlayer(); // Picks another player according to the current difficulty level
+
+        // Create a temporary streak count for "Feeling Lucky"
+        let tempStreak = 0;
+
+        function checkSecondQuestion() {
+            const userGuess2 = document.getElementById('collegeGuess').value.trim().toLowerCase();
+            let isCorrect2 = secondPlayer && isCloseMatch(userGuess2, secondPlayer.college || 'No College');
+
+            if (isCorrect2) {
+                tempStreak++;
+                if (tempStreak === 2) {
+                    correctStreakStandard++;
+                    updateBucketScore();
+                    displayRandomPlayer();
+                }
+            } else {
+                tempStreak = 0;
+                document.getElementById('result').innerHTML = 'Wrong answer. Try again!';
+                wrongSound.play();
+            }
+        }
+
+        function checkFirstQuestion() {
+            const userGuess1 = document.getElementById('collegeGuess').value.trim().toLowerCase();
+            let isCorrect1 = firstPlayer && isCloseMatch(userGuess1, firstPlayer.college || 'No College');
+
+            if (isCorrect1) {
+                tempStreak++;
+                displayNextQuestion(checkSecondQuestion);
+            } else {
+                tempStreak = 0;
+                document.getElementById('result').innerHTML = 'Wrong answer. Try again!';
+                wrongSound.play();
+            }
+        }
+
+        checkFirstQuestion();
+    });
+
+    document.getElementById('goFishBtn').addEventListener('click', () => {
+        let decade = prompt("Choose a decade (1950s, 1960s, 1970s, etc.):");
+        decade = parseInt(decade, 10); // Convert to number
+
+        let playersFromDecade = playersData.filter(player => {
+            return Math.floor(player.retirement_year / 10) * 10 === decade && player.rarity_score <= currentDifficultyLevel;
+        });
+
+        if (playersFromDecade.length > 0) {
+            const selectedPlayer = playersFromDecade[Math.floor(Math.random() * playersFromDecade.length)];
+            displayPlayer(selectedPlayer);
+        } else {
+            document.getElementById('result').innerHTML = `No players found for the ${decade}s. Go fish!`;
+            displayRandomPlayer();
+        }
+    });
+
     // Tooltip handling for mobile
     const tooltip = document.querySelector('.tooltip');
     tooltip.addEventListener('click', (e) => {
@@ -360,3 +420,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+function updateBucketScore() {
+    document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
+
+    // Allow sharing of the bucket score
+    const shareText = `Check out my Bucket Score in MOOKIE: ${Math.round(cumulativeRarityScore)}! ${window.location.href}`;
+    document.getElementById('copyButton').setAttribute('data-snippet', shareText);
+    document.getElementById('copyButton').style.display = 'inline-block';
+}
