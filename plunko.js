@@ -372,7 +372,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('goFishBtn').addEventListener('click', () => {
+        if (document.getElementById('goFishBtn').disabled) {
+            return; // If already disabled, do nothing
+        }
         document.getElementById('decadeDropdownContainer').style.display = 'block';
+        document.getElementById('goFishBtn').disabled = true; // Disable the button
+        document.getElementById('goFishBtn').classList.add('disabled'); // Add a class to gray it out
     });
 
     document.getElementById('decadeDropdown').addEventListener('change', (e) => {
@@ -459,6 +464,8 @@ function handleTwoForOne(isCorrect) {
             document.getElementById('playingTwoForOne').style.display = 'none';
             document.getElementById('splitItBtn').disabled = false; // Re-enable the button after 2-for-1 is done
             document.getElementById('splitItBtn').classList.remove('disabled'); // Remove the disabled class
+            document.getElementById('goFishBtn').disabled = false; // Re-enable the Go Fish button after 2-for-1 is done
+            document.getElementById('goFishBtn').classList.remove('disabled'); // Remove the disabled class
             return true; // Consider as one correct answer
         }
     } else {
@@ -467,6 +474,8 @@ function handleTwoForOne(isCorrect) {
         document.getElementById('playingTwoForOne').style.display = 'none';
         document.getElementById('splitItBtn').disabled = false; // Re-enable the button if the user gets it wrong
         document.getElementById('splitItBtn').classList.remove('disabled'); // Remove the disabled class
+        document.getElementById('goFishBtn').disabled = false; // Re-enable the Go Fish button if the user gets it wrong
+        document.getElementById('goFishBtn').classList.remove('disabled'); // Remove the disabled class from Go Fish button
     }
     return false; // Not yet two correct answers
 }
