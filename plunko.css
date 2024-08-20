@@ -255,19 +255,6 @@
     font-family: 'Anton', sans-serif;
 }
 
-#shareSnippet {
-    margin-top: 10px;
-    padding: 10px;
-    color: #333;
-    font-size: 14px;
-    text-align: center;
-    border: 1px solid #4CAF50;
-    border-radius: 4px;
-    background-color: #f8f8f8;
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
-}
-
 #snippetContainer {
     display: flex;
     align-items: center;
@@ -360,11 +347,6 @@
     0% {transform: scale(1);}
     50% {transform: scale(1.2);}
     100% {transform: scale(1);}
-}
-
-#snippetMessage {
-    font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
 }
 
 #proofButton {
