@@ -251,7 +251,6 @@ function startStandardPlay() {
     document.getElementById('submitBtn').onclick = function() {
         // Hide the snippet and copy button on the next question attempt
         document.getElementById('snippetMessage').style.display = 'none';
-        document.getElementById('shareSnippet').style.display = 'none';
         document.getElementById('copyButton').style.display = 'none';
         document.getElementById('proofButton').style.display = 'none'; // Hide proof button in standard play
 
