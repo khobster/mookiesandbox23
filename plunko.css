@@ -278,7 +278,6 @@
     margin-top: 10px; /* Add more space above the buttons */
     transition: background-color 0.3s;
     font-family: 'Archivo Narrow', sans-serif;
-    display: none; /* Initially hidden */
 }
 
 #copyButton:hover, #returnButton:hover, #proofButton:hover {
