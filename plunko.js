@@ -415,7 +415,7 @@ function displayPlayerFromDecade(decade) {
             playerDecade = '1960s';
         } else if (playerYear >= 70 && playerYear <= 79) {
             playerDecade = '1970s';
-        } else if (playerYear >= 80 and playerYear <= 89) {
+        } else if (playerYear >= 80 && playerYear <= 89) {
             playerDecade = '1980s';
         } else if (playerYear >= 90 && playerYear <= 99) {
             playerDecade = '1990s';
