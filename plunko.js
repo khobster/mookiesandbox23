@@ -357,19 +357,20 @@ function showSuggestions(input) {
         return;
     }
     const suggestions = Array.from(new Set(playersData
-        .map(player => player.college)
-        .filter(college => college and college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
-        .slice(0, 5); // Show up to 5 unique suggestions
-    suggestions.forEach(suggestion => {
-        const suggestionItem = document.createElement('div');
-        suggestionItem.textContent = suggestion;
-        suggestionItem.classList.add('suggestion-item');
-        suggestionItem.addEventListener('click', () => {
-            document.getElementById('collegeGuess').value = suggestion;
-            suggestionsContainer.innerHTML = '';
-        });
-        suggestionsContainer.appendChild(suggestionItem);
+    .map(player => player.college)
+    .filter(college => college && college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
+    .slice(0, 5); // Show up to 5 unique suggestions
+suggestions.forEach(suggestion => {
+    const suggestionItem = document.createElement('div');
+    suggestionItem.textContent = suggestion;
+    suggestionItem.classList.add('suggestion-item');
+    suggestionItem.addEventListener('click', () => {
+        document.getElementById('collegeGuess').value = suggestion;
+        suggestionsContainer.innerHTML = '';
     });
+    suggestionsContainer.appendChild(suggestionItem);
+});
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
