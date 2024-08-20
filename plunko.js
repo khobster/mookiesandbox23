@@ -105,7 +105,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             resultElement.textContent = 'Wrong answer. Try again!';
             resultElement.className = 'incorrect';
             document.getElementById('snippetMessage').style.display = 'none';
-            document.getElementById('shareSnippet').style.display = 'none';
             document.getElementById('copyButton').style.display = 'none';
             wrongSound.play();
             resetButtons(); // Reset the buttons when the answer is wrong
