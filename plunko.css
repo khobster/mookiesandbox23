@@ -19,9 +19,18 @@
     position: relative;
 }
 
+.bottom-container {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 .tooltip {
-    position: relative; /* Change from fixed to relative */
-    margin-left: 10px; /* Add margin to separate from highScore */
     cursor: pointer;
     padding: 8px 16px;
     font-size: 14px;
@@ -41,7 +50,6 @@
     font-size: 14px;
     font-family: 'Archivo Narrow', sans-serif;
     white-space: nowrap;
-    margin-left: 10px; /* Adjust margin to control spacing */
     display: inline-block;
 }
 
