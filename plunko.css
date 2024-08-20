@@ -37,39 +37,32 @@
 }
 
 #highScore {
+    background-color: gold;
+    color: black;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-family: 'Archivo Narrow', sans-serif;
+    white-space: nowrap;
+    display: inline-block;
+    margin-right: 10px; /* Add some space between the high score and how it works tooltip */
+}
+
+.tooltip {
     display: inline-block;
     position: fixed;
-    bottom: 20px; /* Adjust this value to align with tooltip */
-    left: calc(50% + 110px); /* Position it right of the tooltip */
-    transform: translateX(-50%);
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(calc(-50% + 60px)); /* Adjust position to prevent overlap */
     cursor: pointer;
     padding: 8px 16px;
     font-size: 14px;
     font-family: 'Archivo Narrow', sans-serif;
-    background: gold;
+    background: pink;
     border-radius: 12px;
-    color: black;
+    color: white;
     white-space: nowrap;
-    z-index: 1001; /* Ensure it is above other elements */
-}
-
-.tooltip .tooltiptext {
-    visibility: hidden;
-    width: 220px;
-    background-color: lemonchiffon;
-    color: #333;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    bottom: 35px; /* Adjust the position relative to the tooltip text */
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: opacity 0.3s, visibility 0.3s;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    font-family: 'Archivo Narrow', sans-serif; /* Specify the font-family */
+    z-index: 1001;
 }
 
 .tooltip:hover .tooltiptext,
