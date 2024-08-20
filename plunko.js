@@ -7,6 +7,7 @@ let currentDifficultyLevel = 1;
 let cumulativeRarityScore = 0;
 let isTwoForOneActive = false;
 let twoForOneCounter = 0;
+let highScore = 0;
 
 const correctSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/bing-bong.mp3');
 const wrongSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/incorrect-answer-for-plunko.mp3');
@@ -37,7 +38,7 @@ function isCloseMatch(guess, answer) {
         return true;
     }
 
-    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' || simpleGuess === 'carolina')) {
+    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' or simpleGuess === 'carolina')) {
         return true;
     }
 
@@ -80,6 +81,11 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
                 lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
                 resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
+
+                if (cumulativeRarityScore > highScore) {
+                    highScore = cumulativeRarityScore;
+                    document.getElementById('highScore').textContent = `🏆=${highScore}`;
+                }
             }
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
             resultElement.className = 'correct';
@@ -119,7 +125,7 @@ function resetButtons() {
 
 function increaseDifficulty() {
     currentDifficultyLevel += 0.1; // Increment by a smaller step for more gradual difficulty increase
-    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000));
+    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 and player.retirement_year < 2000));
 }
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
@@ -171,6 +177,11 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
                 lastThreeCorrectURL = []; // Clear the list of last three correct players after achieving PLUNKO
                 resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
                 endURLChallenge(true); // call the function right away on PLUNKO
+
+                if (cumulativeRarityScore > highScore) {
+                    highScore = cumulativeRarityScore;
+                    document.getElementById('highScore').textContent = `🏆=${highScore}`;
+                }
             }, 1000);
 
             correctSound.play();
@@ -216,7 +227,7 @@ function loadPlayersData() {
         .then(data => {
             playersData = data;
             playersData.sort((a, b) => a.rarity_score - b.rarity_score); // Sort by rarity score
-            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
+            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 and player.retirement_year < 2000)); // Filter initial players
             const urlPlayers = getPlayersFromURL();
             if (urlPlayers.length > 0) {
                 startURLChallenge(urlPlayers);
@@ -347,7 +358,7 @@ function showSuggestions(input) {
     }
     const suggestions = Array.from(new Set(playersData
         .map(player => player.college)
-        .filter(college => college && college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
+        .filter(college => college and college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
         .slice(0, 5); // Show up to 5 unique suggestions
     suggestions.forEach(suggestion => {
         const suggestionItem = document.createElement('div');
@@ -428,7 +439,7 @@ function displayPlayerFromDecade(decade) {
 
         // Determine the decade based on the retirement year
         let playerDecade;
-        if (playerYear >= 50 && playerYear <= 59) {
+        if (playerYear >= 50 and playerYear <= 59) {
             playerDecade = '1950s';
         } else if (playerYear >= 60 && playerYear <= 69) {
             playerDecade = '1960s';
