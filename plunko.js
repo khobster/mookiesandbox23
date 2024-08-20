@@ -440,7 +440,7 @@ function displayPlayerFromDecade(decade) {
 
         // Determine the decade based on the retirement year
         let playerDecade;
-        if (playerYear >= 50 and playerYear <= 59) {
+        if (playerYear >= 50 && playerYear <= 59) {
             playerDecade = '1950s';
         } else if (playerYear >= 60 && playerYear <= 69) {
             playerDecade = '1960s';
