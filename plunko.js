@@ -31,21 +31,17 @@ function isCloseMatch(guess, answer) {
         "hedidntgotocollege",
         "hedidnotgotocollege",
         "nocollege",
-        "didntgotocollege",
-        "didnotgotocollege",
-        "hedidntgotocollege",
-        "hedidnotgotocollege"
     ];
 
-    if (noCollegePhrases includes(normalizedGuess) && simpleAnswer === '') {
+    if (noCollegePhrases.includes(normalizedGuess) && simpleAnswer === '') {
         return true;
     }
 
-    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' or simpleGuess === 'carolina')) {
+    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' || simpleGuess === 'carolina')) {
         return true;
     }
 
-    return simpleAnswer includes(simpleGuess);
+    return simpleAnswer.includes(simpleGuess);
 }
 
 function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultElement, nextPlayerCallback) {
@@ -56,7 +52,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(true);
         }
 
-        if (!isTwoForOneActive or isCorrect) {
+        if (!isTwoForOneActive || isCorrect) {
             correctStreakStandard++;
             lastThreeCorrectStandard.push(playerName);
             cumulativeRarityScore += player.rarity_score;
@@ -94,7 +90,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(false);
         }
 
-        if (!isTwoForOneActive or not isCorrect) {
+        if (!isTwoForOneActive || !isCorrect) {
             correctStreakStandard = 0;
             lastThreeCorrectStandard = [];
             cumulativeRarityScore = 0; // Reset the cumulative rarity score when the streak is broken
@@ -123,7 +119,7 @@ function resetButtons() {
 
 function increaseDifficulty() {
     currentDifficultyLevel += 0.1; // Increment by a smaller step for more gradual difficulty increase
-    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000));
+    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000));
 }
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
@@ -205,7 +201,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
 
 function copyToClipboard() {
     const snippetText = this.getAttribute('data-snippet');
-    const textToCopy = snippetText or window.location.href;
+    const textToCopy = snippetText || window.location.href;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = this.textContent;
@@ -220,7 +216,7 @@ function loadPlayersData() {
         .then(data => {
             playersData = data;
             playersData.sort((a, b) => a.rarity_score - b.rarity_score); // Sort by rarity score
-            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
+            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
             const urlPlayers = getPlayersFromURL();
             if (urlPlayers.length > 0) {
                 startURLChallenge(urlPlayers);
@@ -250,7 +246,7 @@ function startStandardPlay() {
         const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
         const playerName = document.getElementById('playerName').textContent;
         const player = playersData.find(p => p.name === playerName);
-        let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
+        let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
         updateStreakAndGenerateSnippetStandard(isCorrect, playerName, document.getElementById('result'), displayRandomPlayer);
     };
 }
@@ -296,7 +292,7 @@ function startURLChallenge(playerNames) {
                     document.getElementById('proofButton').style.display = 'none'; // Hide proof button in URL play until needed
 
                     const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
-                    let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
+                    let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
                     updateStreakAndGenerateSnippetURL(isCorrect, player.name, document.getElementById('result'), nextPlayer, index, playerNames.length);
                 };
             } else {
@@ -331,6 +327,7 @@ function endURLChallenge(success) {
     document.getElementById('returnButton').style.display = 'inline-block';
     document.getElementById('returnButton').textContent = 'Play again';
     document.getElementById('submitBtn').style.display = 'none';
+    resetButtons(); // Reset the buttons when a new game is started
 }
 
 function getPlayersFromURL() {
@@ -350,7 +347,7 @@ function showSuggestions(input) {
     }
     const suggestions = Array.from(new Set(playersData
         .map(player => player.college)
-        .filter(college => college && college.toLowerCase() includes(input.toLowerCase()))))
+        .filter(college => college && college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
         .slice(0, 5); // Show up to 5 unique suggestions
     suggestions.forEach(suggestion => {
         const suggestionItem = document.createElement('div');
