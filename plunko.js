@@ -84,7 +84,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
 
                 if (cumulativeRarityScore > highScore) {
                     highScore = cumulativeRarityScore;
-                    document.getElementById('highScore').textContent = `🏆=${highScore}`;
+                    document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
                 }
             }
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
