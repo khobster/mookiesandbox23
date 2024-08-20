@@ -260,6 +260,7 @@
     align-items: center;
     justify-content: center;
     margin-top: 10px;
+    display: none; /* Hidden by default */
 }
 
 #snippetMessage {
