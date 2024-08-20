@@ -37,15 +37,15 @@ function isCloseMatch(guess, answer) {
         "hedidnotgotocollege"
     ];
 
-    if (noCollegePhrases.includes(normalizedGuess) && simpleAnswer === '') {
+    if (noCollegePhrases includes(normalizedGuess) && simpleAnswer === '') {
         return true;
     }
 
-    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' || simpleGuess === 'carolina')) {
+    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' or simpleGuess === 'carolina')) {
         return true;
     }
 
-    return simpleAnswer.includes(simpleGuess);
+    return simpleAnswer includes(simpleGuess);
 }
 
 function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultElement, nextPlayerCallback) {
@@ -56,7 +56,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(true);
         }
 
-        if (!isTwoForOneActive || isCorrect) {
+        if (!isTwoForOneActive or isCorrect) {
             correctStreakStandard++;
             lastThreeCorrectStandard.push(playerName);
             cumulativeRarityScore += player.rarity_score;
@@ -83,6 +83,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 increaseDifficulty();
                 correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
                 lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
+                resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
             }
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
             resultElement.className = 'correct';
@@ -93,7 +94,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(false);
         }
 
-        if (!isTwoForOneActive || !isCorrect) {
+        if (!isTwoForOneActive or not isCorrect) {
             correctStreakStandard = 0;
             lastThreeCorrectStandard = [];
             cumulativeRarityScore = 0; // Reset the cumulative rarity score when the streak is broken
@@ -104,14 +105,25 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             document.getElementById('shareSnippet').style.display = 'none';
             document.getElementById('copyButton').style.display = 'none';
             wrongSound.play();
+            resetButtons(); // Reset the buttons when the answer is wrong
         }
     }
     setTimeout(nextPlayerCallback, 3000); // Show next player after a delay
 }
 
+function resetButtons() {
+    // Re-enable and reset the Go 🐟 button
+    document.getElementById('goFishBtn').disabled = false;
+    document.getElementById('goFishBtn').classList.remove('disabled');
+
+    // Re-enable and reset the Split It button
+    document.getElementById('splitItBtn').disabled = false;
+    document.getElementById('splitItBtn').classList.remove('disabled');
+}
+
 function increaseDifficulty() {
     currentDifficultyLevel += 0.1; // Increment by a smaller step for more gradual difficulty increase
-    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000));
+    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000));
 }
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
@@ -161,6 +173,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
                 increaseDifficulty();
                 correctStreakURL = 0; // Reset the correct streak after achieving PLUNKO
                 lastThreeCorrectURL = []; // Clear the list of last three correct players after achieving PLUNKO
+                resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
                 endURLChallenge(true); // call the function right away on PLUNKO
             }, 1000);
 
@@ -185,13 +198,14 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
         document.getElementById('returnButton').style.display = 'inline-block';
         document.getElementById('returnButton').textContent = 'Start a Fresh MOOKIE';
         wrongSound.play();
+        resetButtons(); // Reset the buttons when the answer is wrong
         endURLChallenge(false); // call the function right away on incorrect answer
     }
 }
 
 function copyToClipboard() {
     const snippetText = this.getAttribute('data-snippet');
-    const textToCopy = snippetText || window.location.href;
+    const textToCopy = snippetText or window.location.href;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = this.textContent;
@@ -206,7 +220,7 @@ function loadPlayersData() {
         .then(data => {
             playersData = data;
             playersData.sort((a, b) => a.rarity_score - b.rarity_score); // Sort by rarity score
-            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
+            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
             const urlPlayers = getPlayersFromURL();
             if (urlPlayers.length > 0) {
                 startURLChallenge(urlPlayers);
@@ -236,7 +250,7 @@ function startStandardPlay() {
         const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
         const playerName = document.getElementById('playerName').textContent;
         const player = playersData.find(p => p.name === playerName);
-        let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
+        let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
         updateStreakAndGenerateSnippetStandard(isCorrect, playerName, document.getElementById('result'), displayRandomPlayer);
     };
 }
@@ -282,7 +296,7 @@ function startURLChallenge(playerNames) {
                     document.getElementById('proofButton').style.display = 'none'; // Hide proof button in URL play until needed
 
                     const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
-                    let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
+                    let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
                     updateStreakAndGenerateSnippetURL(isCorrect, player.name, document.getElementById('result'), nextPlayer, index, playerNames.length);
                 };
             } else {
@@ -336,7 +350,7 @@ function showSuggestions(input) {
     }
     const suggestions = Array.from(new Set(playersData
         .map(player => player.college)
-        .filter(college => college && college.toLowerCase().includes(input.toLowerCase()))))
+        .filter(college => college && college.toLowerCase() includes(input.toLowerCase()))))
         .slice(0, 5); // Show up to 5 unique suggestions
     suggestions.forEach(suggestion => {
         const suggestionItem = document.createElement('div');
@@ -368,15 +382,18 @@ document.addEventListener('DOMContentLoaded', () => {
         twoForOneCounter = 0;
         document.getElementById('splitItBtn').disabled = true; // Disable the button
         document.getElementById('splitItBtn').classList.add('disabled'); // Add a class to gray it out
+        document.getElementById('goFishBtn').disabled = true; // Disable Go Fish during Split It
+        document.getElementById('goFishBtn').classList.add('disabled'); // Add a class to gray it out
         displayRandomPlayer(); // Skip the current question
     });
 
     document.getElementById('goFishBtn').addEventListener('click', () => {
-        if (document.getElementById('goFishBtn').disabled) {
-            return; // If already disabled, do nothing
+        if (isTwoForOneActive) {
+            // If they are already in 2-for-1 mode, do nothing
+            return;
         }
         document.getElementById('decadeDropdownContainer').style.display = 'block';
-        document.getElementById('goFishBtn').disabled = true; // Disable the button
+        document.getElementById('goFishBtn').disabled = true; // Disable the button after it's clicked
         document.getElementById('goFishBtn').classList.add('disabled'); // Add a class to gray it out
     });
 
@@ -416,19 +433,19 @@ function displayPlayerFromDecade(decade) {
         let playerDecade;
         if (playerYear >= 50 && playerYear <= 59) {
             playerDecade = '1950s';
-        } else if (playerYear >= 60 && playerYear <= 69) {
+        } else if (playerYear >= 60 and playerYear <= 69) {
             playerDecade = '1960s';
-        } else if (playerYear >= 70 && playerYear <= 79) {
+        } else if (playerYear >= 70 and playerYear <= 79) {
             playerDecade = '1970s';
-        } else if (playerYear >= 80 && playerYear <= 89) {
+        } else if (playerYear >= 80 and playerYear <= 89) {
             playerDecade = '1980s';
-        } else if (playerYear >= 90 && playerYear <= 99) {
+        } else if (playerYear >= 90 and playerYear <= 99) {
             playerDecade = '1990s';
-        } else if (playerYear >= 0 && playerYear <= 9) {
+        } else if (playerYear >= 0 and playerYear <= 9) {
             playerDecade = '2000s';
-        } else if (playerYear >= 10 && playerYear <= 19) {
+        } else if (playerYear >= 10 and playerYear <= 19) {
             playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
+        } else if (playerYear >= 20 and playerYear <= 29) {
             playerDecade = '2020s';
         }
 
