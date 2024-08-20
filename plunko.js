@@ -7,6 +7,7 @@ let currentDifficultyLevel = 1;
 let cumulativeRarityScore = 0;
 let isTwoForOneActive = false;
 let twoForOneCounter = 0;
+let highScore = 0;
 
 const correctSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/bing-bong.mp3');
 const wrongSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/incorrect-answer-for-plunko.mp3');
@@ -42,6 +43,14 @@ function isCloseMatch(guess, answer) {
     }
 
     return simpleAnswer.includes(simpleGuess);
+}
+
+function updateHighScore() {
+    if (cumulativeRarityScore > highScore) {
+        highScore = cumulativeRarityScore;
+    }
+    document.getElementById('highScoreCount').textContent = highScore;
+    document.getElementById('highScoreButton').textContent = `🏆=${highScore}`;
 }
 
 function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultElement, nextPlayerCallback) {
@@ -81,6 +90,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
                 resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
             }
+            updateHighScore(); // Update and display the high score
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
             resultElement.className = 'correct';
             correctSound.play();
@@ -103,6 +113,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             wrongSound.play();
             resetButtons(); // Reset the buttons when the answer is wrong
         }
+        updateHighScore(); // Update and display the high score if they fail
     }
     setTimeout(nextPlayerCallback, 3000); // Show next player after a delay
 }
@@ -195,6 +206,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
         document.getElementById('returnButton').textContent = 'Start a Fresh MOOKIE';
         wrongSound.play();
         resetButtons(); // Reset the buttons when the answer is wrong
+        updateHighScore(); // Update and display the high score if they fail
         endURLChallenge(false); // call the function right away on incorrect answer
     }
 }
@@ -207,6 +219,18 @@ function copyToClipboard() {
         const originalText = this.textContent;
         this.textContent = 'Copied!';
         setTimeout(() => this.textContent = originalText, 2000);
+    });
+}
+
+function copyHighScoreSnippet() {
+    const highScore = document.getElementById('highScoreCount').textContent || '0';
+    const shareText = `I scored 🏆=${highScore} in MOOKIE! Can you beat my high score? ${window.location.href}`;
+    
+    navigator.clipboard.writeText(shareText).then(() => {
+        const highScoreButton = document.getElementById('highScoreButton');
+        const originalText = highScoreButton.textContent;
+        highScoreButton.textContent = 'Copied!';
+        setTimeout(() => highScoreButton.textContent = `🏆=${highScore}`, 2000);
     });
 }
 
@@ -408,6 +432,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'https://www.mookie.click';
     });
 
+    document.getElementById('highScoreButton').addEventListener('click', copyHighScoreSnippet);
+
     // Tooltip handling for mobile
     const tooltip = document.querySelector('.tooltip');
     tooltip.addEventListener('click', (e) => {
@@ -440,9 +466,9 @@ function displayPlayerFromDecade(decade) {
             playerDecade = '1990s';
         } else if (playerYear >= 0 && playerYear <= 9) {
             playerDecade = '2000s';
-        } else if (playerYear >= 10 && playerYear <= 19) {
+        } else if (playerYear >= 10 and playerYear <= 19) {
             playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
+        } else if (playerYear >= 20 and playerYear <= 29) {
             playerDecade = '2020s';
         }
 
