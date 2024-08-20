@@ -61,6 +61,20 @@
     opacity: 1;
 }
 
+.highScoreButton {
+    background-color: gold;
+    color: black;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-family: 'Archivo Narrow', sans-serif;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-left: 10px;
+    white-space: nowrap;
+    display: inline-block;
+}
+
 #questionContainer {
     text-align: center;
     margin-bottom: 10px; /* Adjust this for spacing between question and input */
