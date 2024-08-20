@@ -147,12 +147,6 @@
     background-color: #E5D85C; /* Slightly darker off-white on hover */
 }
 
-#splitItBtn.disabled {
-    background-color: #d3d3d3; /* Light gray to indicate the button is disabled */
-    color: #808080; /* Gray text color */
-    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
-}
-
 #goFishBtn {
     background-color: #1E90FF; /* Ocean blue color */
     color: white;
@@ -174,6 +168,18 @@
 
 #goFishBtn:hover {
     background-color: #1C86EE; /* Darker shade on hover */
+}
+
+#goFishBtn.disabled {
+    background-color: #d3d3d3; /* Light gray to indicate the button is disabled */
+    color: #808080; /* Gray text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
+}
+
+#splitItBtn.disabled {
+    background-color: #d3d3d3; /* Light gray to indicate the button is disabled */
+    color: #808080; /* Gray text color */
+    cursor: not-allowed; /* Change cursor to indicate it's not clickable */
 }
 
 #decadeDropdownContainer {
