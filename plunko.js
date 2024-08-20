@@ -49,47 +49,48 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
     const player = playersData.find(p => p.name === playerName);
 
     if (isCorrect && player) {
-        if (isTwoForOneActive) {
-            isCorrect = handleTwoForOne(true);
+    if (isTwoForOneActive) {
+        isCorrect = handleTwoForOne(true);
+    }
+
+    if (!isTwoForOneActive || isCorrect) {
+        correctStreakStandard++;
+        lastThreeCorrectStandard.push(playerName);
+        cumulativeRarityScore += player.rarity_score;
+
+        // Update high score after every correct answer
+        if (cumulativeRarityScore > highScore) {
+            highScore = cumulativeRarityScore;
+            document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
         }
 
-        if (!isTwoForOneActive || isCorrect) {
-            correctStreakStandard++;
-            lastThreeCorrectStandard.push(playerName);
-            cumulativeRarityScore += player.rarity_score;
-
-            if (lastThreeCorrectStandard.length > 3) {
-                lastThreeCorrectStandard.shift();
-            }
-            if (correctStreakStandard === 1) {
-                resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just two more to get this <span class='kaboom'>MOOoooOOKIE!</span>";
-            } else if (correctStreakStandard === 2) {
-                resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just one more to get a <span class='kaboom'>MOOoooOOKIE!</span>";
-            } else if (correctStreakStandard === 3) {
-                resultElement.innerHTML = "<span class='kaboom'>MOOoooooOOOOKIE!</span>";
-                const encodedPlayers = encodeURIComponent(lastThreeCorrectStandard.join(','));
-                const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
-                const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
-                let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
-                document.getElementById('shareSnippet').innerHTML = shareText;
-                document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
-                document.getElementById('snippetMessage').style.display = 'block'; // Show the message
-                document.getElementById('shareSnippet').style.display = 'block'; // Show the share snippet
-                document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-                document.getElementById('copyButton').style.display = 'inline-block';
-                increaseDifficulty();
-                correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
-                lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
-                resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
-
-                if (cumulativeRarityScore > highScore) {
-                    highScore = cumulativeRarityScore;
-                    document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
-                }
-            }
-            document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
-            resultElement.className = 'correct';
-            correctSound.play();
+        if (lastThreeCorrectStandard.length > 3) {
+            lastThreeCorrectStandard.shift();
+        }
+        if (correctStreakStandard === 1) {
+            resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just two more to get this <span class='kaboom'>MOOoooOOKIE!</span>";
+        } else if (correctStreakStandard === 2) {
+            resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Now you need to get just one more to get a <span class='kaboom'>MOOoooOOKIE!</span>";
+        } else if (correctStreakStandard === 3) {
+            resultElement.innerHTML = "<span class='kaboom'>MOOoooooOOOOKIE!</span>";
+            const encodedPlayers = encodeURIComponent(lastThreeCorrectStandard.join(','));
+            const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
+            const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
+            let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
+            document.getElementById('shareSnippet').innerHTML = shareText;
+            document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
+            document.getElementById('snippetMessage').style.display = 'block'; // Show the message
+            document.getElementById('shareSnippet').style.display = 'block'; // Show the share snippet
+            document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
+            document.getElementById('copyButton').style.display = 'inline-block';
+            increaseDifficulty();
+            correctStreakStandard = 0; // Reset the correct streak after achieving PLUNKO
+            lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving PLUNKO
+            resetButtons(); // Reset the buttons when a MoooOOOOkie! is achieved
+        }
+        document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
+        resultElement.className = 'correct';
+        correctSound.play();
         }
     } else {
         if (isTwoForOneActive) {
