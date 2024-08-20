@@ -103,8 +103,9 @@
     color: #f8f8f8;
     text-transform: uppercase;
     border: none;
-    padding: 8px 12px;
-    font-size: 14px;
+    padding: 12px 12px; /* Increase the padding to make the button taller */
+    font-size: 18px; /* Increase the font size */
+    font-weight: bold; /* Make the text bold */
     cursor: pointer;
     border-radius: 4px;
     transition: background-color 0.3s;
@@ -112,6 +113,7 @@
     margin-bottom: 10px;
     margin-top: 20px; /* Add margin to separate from input fields */
     width: 100%; /* Make the main button span the full width */
+    line-height: 1.2; /* Adjust line height for better text spacing */
 }
 
 #submitBtn:hover {
