@@ -77,10 +77,8 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
             const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
             let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
-            document.getElementById('shareSnippet').innerHTML = shareText;
             document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
             document.getElementById('snippetMessage').style.display = 'block'; // Show the message
-            document.getElementById('shareSnippet').style.display = 'block'; // Show the share snippet
             document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
             document.getElementById('copyButton').style.display = 'inline-block';
             increaseDifficulty();
@@ -297,7 +295,6 @@ function startURLChallenge(playerNames) {
                 document.getElementById('submitBtn').onclick = function() {
                     // Hide the snippet and copy button on the next question attempt
                     document.getElementById('snippetMessage').style.display = 'none';
-                    document.getElementById('shareSnippet').style.display = 'none';
                     document.getElementById('copyButton').style.display = 'none';
                     document.getElementById('proofButton').style.display = 'none'; // Hide proof button in URL play until needed
 
