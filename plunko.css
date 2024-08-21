@@ -455,22 +455,18 @@
     cursor: pointer;
 }
 
-/* Overlay for popup */
 #popupOverlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
-    background-size: 400% 400%;
-    opacity: 0.5;
-    z-index: 999; /* Make sure it is behind the popup */
-    animation: rainbowMotion 10s ease infinite;
+    background: linear-gradient(135deg, red, orange, yellow, green, blue, violet);
+    z-index: 999; /* Ensure it is behind the popup but above other content */
+    animation: rainbowFade 3s infinite;
 }
 
-/* Animation for rainbow motion */
-@keyframes rainbowMotion {
+@keyframes rainbowFade {
     0% {background-position: 0% 50%;}
     50% {background-position: 100% 50%;}
     100% {background-position: 0% 50%;}
