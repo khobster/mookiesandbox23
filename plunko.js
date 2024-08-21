@@ -198,14 +198,15 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
     }
 }
 
-function copyToClipboard() {
-    const snippetText = this.getAttribute('data-snippet');
+function copyToClipboard(event) {
+    const button = event.target; // Use event target to ensure correct button is referenced
+    const snippetText = button.getAttribute('data-snippet');
     const textToCopy = snippetText || window.location.href;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
-        const originalText = this.textContent;
-        this.textContent = 'Copied!';
-        setTimeout(() => this.textContent = originalText, 2000);
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => button.textContent = originalText, 2000);
     });
 }
 
@@ -341,19 +342,19 @@ function showSuggestions(input) {
         return;
     }
     const suggestions = Array.from(new Set(playersData
-    .map(player => player.college)
-    .filter(college => college && college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
-    .slice(0, 5); // Show up to 5 unique suggestions
-suggestions.forEach(suggestion => {
-    const suggestionItem = document.createElement('div');
-    suggestionItem.textContent = suggestion;
-    suggestionItem.classList.add('suggestion-item');
-    suggestionItem.addEventListener('click', () => {
-        document.getElementById('collegeGuess').value = suggestion;
-        suggestionsContainer.innerHTML = '';
+        .map(player => player.college)
+        .filter(college => college && college.toLowerCase().indexOf(input.toLowerCase()) !== -1)))
+        .slice(0, 5); // Show up to 5 unique suggestions
+    suggestions.forEach(suggestion => {
+        const suggestionItem = document.createElement('div');
+        suggestionItem.textContent = suggestion;
+        suggestionItem.classList.add('suggestion-item');
+        suggestionItem.addEventListener('click', () => {
+            document.getElementById('collegeGuess').value = suggestion;
+            suggestionsContainer.innerHTML = '';
+        });
+        suggestionsContainer.appendChild(suggestionItem);
     });
-    suggestionsContainer.appendChild(suggestionItem);
-});
 
 }
 
@@ -399,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('copyButton').addEventListener('click', copyToClipboard);
+    document.getElementById('popupCopyButton').addEventListener('click', copyToClipboard);
     document.getElementById('proofButton').addEventListener('click', copyToClipboard); // Add event listener for proof button
     document.getElementById('returnButton').addEventListener('click', () => {
         window.location.href = 'https://www.mookie.click';
@@ -418,16 +420,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Event listeners for MOOKIE popup buttons
-    document.getElementById('popupCopyButton').addEventListener('click', function() {
-        copyToClipboard.call(this); // Use the same copy functionality
+    document.getElementById('popupContinueButton').addEventListener('click', function () {
         closeMookiePopup();
     });
 
-    document.getElementById('popupContinueButton').addEventListener('click', function() {
-        closeMookiePopup();
-    });
-
-    document.getElementById('closePopup').addEventListener('click', function() {
+    document.getElementById('closePopup').addEventListener('click', function () {
         closeMookiePopup();
     });
 });
