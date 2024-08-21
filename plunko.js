@@ -58,6 +58,9 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             lastThreeCorrectStandard.push(playerName);
             cumulativeRarityScore += player.rarity_score;
 
+            // Debugging log to check streak progression
+            console.log(`Current Streak: ${correctStreakStandard}`);
+
             // Update high score after every correct answer
             if (cumulativeRarityScore > highScore) {
                 highScore = cumulativeRarityScore;
@@ -79,13 +82,16 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 const shareLink = `https://www.mookie.click/?players=${encodedPlayers}`;
                 const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
                 let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
-                
+
                 // Show the snippet and copy button when streak is 3
                 document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
                 document.getElementById('snippetMessage').style.display = 'block'; // Show the message
                 document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
                 document.getElementById('copyButton').style.display = 'inline-block';
-                
+
+                // Debugging log to confirm display
+                console.log('Mookie achieved! Displaying challenge message and button.');
+
                 increaseDifficulty();
                 correctStreakStandard = 0; // Reset the correct streak after achieving MOOKIE
                 lastThreeCorrectStandard = []; // Clear the list of last three correct players after achieving MOOKIE
