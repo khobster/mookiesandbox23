@@ -462,8 +462,9 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(135deg, red, orange, yellow, green, blue, violet);
+    background-size: 400% 400%; /* Increase background size to allow for animation */
     z-index: 999; /* Ensure it is behind the popup but above other content */
-    animation: rainbowFade 3s infinite;
+    animation: rainbowFade 3s infinite; /* Reference the animation for the moving effect */
 }
 
 @keyframes rainbowFade {
