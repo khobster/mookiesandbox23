@@ -383,3 +383,74 @@
     height: auto; /* Maintain aspect ratio */
     margin: 0 auto; /* Center the logo */
 }
+
+/* Popup container */
+.popup {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    font-family: 'Archivo Narrow', sans-serif;
+}
+
+/* Popup content */
+.popup-content {
+    position: relative;
+    padding: 20px;
+}
+
+/* MOOKIE logo in the popup */
+.popup-logo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+/* Popup message styling */
+.popup-message {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Popup buttons container */
+.popup-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+/* Buttons styling */
+#popupCopyButton, #popupContinueButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    flex: 1;
+    font-family: 'Archivo Narrow', sans-serif;
+}
+
+/* Hover effect for buttons */
+#popupCopyButton:hover, #popupContinueButton:hover {
+    background-color: #45a049;
+}
+
+/* Close button styling */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 18px;
+    cursor: pointer;
+}
