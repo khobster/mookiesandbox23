@@ -83,22 +83,9 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 const decodedPlayers = decodeURIComponent(encodedPlayers).replace(/,/g, ', ');
                 let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
 
-                // Show the snippet and copy button when streak is 3
-                console.log('Attempting to display snippet message and copy button.');
-                const snippetContainer = document.getElementById('snippetContainer');
-                const snippetMessageElement = document.getElementById('snippetMessage');
-                const copyButtonElement = document.getElementById('copyButton');
-
-                if (snippetMessageElement && copyButtonElement && snippetContainer) {
-                    snippetMessageElement.innerHTML = 'Challenge friends with this MOOKIE:';
-                    copyButtonElement.setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-                    snippetContainer.classList.add('show'); // Add the show class to make it visible
-
-                    // Debugging log to confirm visibility
-                    console.log('Snippet message and copy button should now be visible.');
-                } else {
-                    console.log('Snippet message, copy button, or container not found in the DOM.');
-                }
+                // Show the MOOKIE popup when streak is 3
+                console.log('Displaying MOOKIE popup.');
+                showMookiePopup(shareText);
 
                 increaseDifficulty();
                 correctStreakStandard = 0; // Reset the correct streak after achieving MOOKIE
@@ -121,7 +108,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             document.getElementById('plunkosCount').textContent = '0'; // Update the display
             resultElement.textContent = 'Wrong answer. Try again!';
             resultElement.className = 'incorrect';
-            document.getElementById('snippetContainer').classList.remove('show'); // Hide the snippet and button
             wrongSound.play();
             resetButtons(); // Reset the buttons when the answer is wrong
         }
@@ -174,33 +160,21 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
             resultElement.className = 'correct';
             console.log('Appended message element to resultElement:', resultElement.innerHTML);
 
-            // Add share snippet and buttons
-            setTimeout(() => {
-                const shareText = `I got all 3 correct in MOOKIE! Check it out: ${window.location.href}`;
-                document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-                document.getElementById('copyButton').style.display = 'inline-block';
-
-                const proofText = `Proof I nailed the MOOKIE challenge: ${window.location.href}`;
-                document.getElementById('proofButton').setAttribute('data-snippet', proofText); // Set proof text as data-snippet
-                document.getElementById('proofButton').style.display = 'inline-block'; // Show proof button
-
-                document.getElementById('returnButton').style.display = 'inline-block';
-                document.getElementById('returnButton').textContent = 'Start a Fresh MOOKIE';
-                document.getElementById('submitBtn').style.display = 'none';
-                document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
-                increaseDifficulty();
-                correctStreakURL = 0; // Reset the correct streak after achieving MOOKIE
-                lastThreeCorrectURL = []; // Clear the list of last three correct players after achieving MOOKIE
-                resetButtons(); // Reset the buttons when a MOOKIE is achieved
-                endURLChallenge(true); // call the function right away on MOOKIE
-
-                if (cumulativeRarityScore > highScore) {
-                    highScore = cumulativeRarityScore;
-                    document.getElementById('highScore').textContent = `🏆=${highScore}`;
-                }
-            }, 1000);
+            // Show the MOOKIE popup
+            const shareText = `I got all 3 correct in MOOKIE! Check it out: ${window.location.href}`;
+            showMookiePopup(shareText);
 
             correctSound.play();
+            increaseDifficulty();
+            correctStreakURL = 0; // Reset the correct streak after achieving MOOKIE
+            lastThreeCorrectURL = []; // Clear the list of last three correct players after achieving MOOKIE
+            resetButtons(); // Reset the buttons when a MOOKIE is achieved
+            endURLChallenge(true); // call the function right away on MOOKIE
+
+            if (cumulativeRarityScore > highScore) {
+                highScore = cumulativeRarityScore;
+                document.getElementById('highScore').textContent = `🏆=${highScore}`;
+            }
         } else {
             resultElement.innerHTML = "That's <span style='color: yellow;'>CORRECT!</span> Keep going!";
             resultElement.className = 'correct';
@@ -216,8 +190,6 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
         document.getElementById('plunkosCount').textContent = '0'; // Update the display
         resultElement.textContent = 'Wrong answer. Try again!';
         resultElement.className = 'incorrect';
-        document.getElementById('copyButton').style.display = 'none';
-        document.getElementById('proofButton').style.display = 'none'; // Hide proof button on incorrect
         document.getElementById('returnButton').style.display = 'inline-block';
         document.getElementById('returnButton').textContent = 'Start a Fresh MOOKIE';
         wrongSound.play();
@@ -444,6 +416,20 @@ document.addEventListener('DOMContentLoaded', () => {
             tooltip.classList.remove('active');
         }
     });
+
+    // Event listeners for MOOKIE popup buttons
+    document.getElementById('popupCopyButton').addEventListener('click', function() {
+        copyToClipboard.call(this); // Use the same copy functionality
+        closeMookiePopup();
+    });
+
+    document.getElementById('popupContinueButton').addEventListener('click', function() {
+        closeMookiePopup();
+    });
+
+    document.getElementById('closePopup').addEventListener('click', function() {
+        closeMookiePopup();
+    });
 });
 
 function displayPlayerFromDecade(decade) {
@@ -466,7 +452,7 @@ function displayPlayerFromDecade(decade) {
             playerDecade = '2000s';
         } else if (playerYear >= 10 && playerYear <= 19) {
             playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
+        } else if (playerYear >= 20 and playerYear <= 29) {
             playerDecade = '2020s';
         }
 
@@ -516,4 +502,16 @@ function handleTwoForOne(isCorrect) {
         document.getElementById('goFishBtn').classList.remove('disabled'); // Remove the disabled class from Go Fish button
     }
     return false; // Not yet two correct answers
+}
+
+// MOOKIE Popup Functions
+function showMookiePopup(shareText) {
+    const popup = document.getElementById('mookiePopup');
+    document.getElementById('popupCopyButton').setAttribute('data-snippet', shareText);
+    popup.style.display = 'block';
+}
+
+function closeMookiePopup() {
+    const popup = document.getElementById('mookiePopup');
+    popup.style.display = 'none';
 }
