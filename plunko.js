@@ -361,73 +361,38 @@ function showSuggestions(input) {
 document.addEventListener('DOMContentLoaded', () => {
     loadPlayersData();
 
-    document.getElementById('collegeGuess').addEventListener('input', (e) => {
-        showSuggestions(e.target.value);
-    });
+    // Determine if the current game is in challenge mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const isChallengeMode = urlParams.has('players');
 
-    document.getElementById('splitItBtn').addEventListener('click', () => {
-        if (isTwoForOneActive) {
-            // If they are already in 2-for-1 mode, do nothing
-            return;
-        }
-        document.getElementById('playingTwoForOne').style.display = 'inline';
-        document.getElementById('playingTwoForOne').textContent = 'playing 2 for 1 now';
-        isTwoForOneActive = true;
-        twoForOneCounter = 0;
-        document.getElementById('splitItBtn').disabled = true; // Disable the button
-        document.getElementById('splitItBtn').classList.add('disabled'); // Add a class to gray it out
-        document.getElementById('goFishBtn').disabled = true; // Disable Go Fish during Split It
-        document.getElementById('goFishBtn').classList.add('disabled'); // Add a class to gray it out
-        displayRandomPlayer(); // Skip the current question
-    });
-
-    document.getElementById('goFishBtn').addEventListener('click', () => {
-        if (isTwoForOneActive) {
-            // If they are already in 2-for-1 mode, do nothing
-            return;
-        }
-        document.getElementById('decadeDropdownContainer').style.display = 'block';
-        document.getElementById('goFishBtn').disabled = true; // Disable the button after it's clicked
-        document.getElementById('goFishBtn').classList.add('disabled'); // Add a class to gray it out
-    });
-
-    document.getElementById('decadeDropdown').addEventListener('change', (e) => {
-        const selectedDecade = e.target.value;
-        if (selectedDecade) {
-            displayPlayerFromDecade(selectedDecade); // Display a new player based on the selected decade
-            document.getElementById('decadeDropdownContainer').style.display = 'none'; // Hide dropdown after selection
-        }
-    });
-
-    document.getElementById('copyButton').addEventListener('click', copyToClipboard);
-    document.getElementById('popupCopyButton').addEventListener('click', copyToClipboard);
-    document.getElementById('proofButton').addEventListener('click', copyToClipboard); // Add event listener for proof button
-    document.getElementById('returnButton').addEventListener('click', () => {
-        window.location.href = 'https://www.mookie.click';
-    });
-
-    // Tooltip handling for mobile
-    const tooltip = document.querySelector('.tooltip');
-    tooltip.addEventListener('click', (e) => {
-        e.stopPropagation();
-        tooltip.classList.toggle('active');
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!tooltip.contains(e.target)) {
-            tooltip.classList.remove('active');
-        }
-    });
-
-    // Event listeners for MOOKIE popup buttons
-    document.getElementById('popupContinueButton').addEventListener('click', function () {
-        closeMookiePopup();
-    });
-
-    document.getElementById('closePopup').addEventListener('click', function () {
-        closeMookiePopup();
-    });
+    if (isChallengeMode) {
+        setupChallengeMode();
+    } else {
+        setupStandardMode();
+    }
 });
+
+function setupStandardMode() {
+    document.getElementById('goFishBtn').style.display = 'block';
+    document.getElementById('splitItBtn').style.display = 'block';
+    document.getElementById('submitBtn').classList.remove('challenge-mode-style');
+    startStandardPlay();
+}
+
+function setupChallengeMode() {
+    document.getElementById('goFishBtn').style.display = 'none';
+    document.getElementById('splitItBtn').style.display = 'none';
+    document.getElementById('submitBtn').classList.add('challenge-mode-style');
+    document.getElementById('returnButton').style.display = 'inline-block';
+    document.getElementById('submitBtn').style.display = 'inline-block';
+    
+    const urlPlayers = getPlayersFromURL();
+    if (urlPlayers.length > 0) {
+        startURLChallenge(urlPlayers);
+    } else {
+        document.getElementById('playerQuestion').textContent = 'No players available for this challenge.';
+    }
+}
 
 function displayPlayerFromDecade(decade) {
     const playersFromDecade = playersData.filter(player => {
@@ -447,9 +412,9 @@ function displayPlayerFromDecade(decade) {
             playerDecade = '1990s';
         } else if (playerYear >= 0 && playerYear <= 9) {
             playerDecade = '2000s';
-        } else if (playerYear >= 10 && playerYear <= 19) {
+        } else if (playerYear >= 10 and playerYear <= 19) {
             playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
+        } else if (playerYear >= 20 and playerYear <= 29) {
             playerDecade = '2020s';
         }
 
