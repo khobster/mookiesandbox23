@@ -38,7 +38,7 @@ function isCloseMatch(guess, answer) {
         return true;
     }
 
-    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' || simpleGuess === 'carolina')) {
+    if (simpleAnswer === 'unc' && (simpleGuess === 'north carolina' or simpleGuess === 'carolina')) {
         return true;
     }
 
@@ -53,7 +53,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(true);
         }
 
-        if (!isTwoForOneActive || isCorrect) {
+        if (!isTwoForOneActive or isCorrect) {
             correctStreakStandard++;
             lastThreeCorrectStandard.push(playerName);
             cumulativeRarityScore += player.rarity_score;
@@ -85,24 +85,19 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
 
                 // Show the snippet and copy button when streak is 3
                 console.log('Attempting to display snippet message and copy button.');
+                const snippetContainer = document.getElementById('snippetContainer');
                 const snippetMessageElement = document.getElementById('snippetMessage');
                 const copyButtonElement = document.getElementById('copyButton');
 
-                if (snippetMessageElement && copyButtonElement) {
+                if (snippetMessageElement && copyButtonElement && snippetContainer) {
                     snippetMessageElement.innerHTML = 'Challenge friends with this one:';
-                    snippetMessageElement.style.display = 'block'; // Ensure it's visible
-                    snippetMessageElement.style.visibility = 'visible'; // Force visibility
-                    snippetMessageElement.style.opacity = 1; // Force opacity
-
                     copyButtonElement.setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-                    copyButtonElement.style.display = 'inline-block'; // Ensure it's visible
-                    copyButtonElement.style.visibility = 'visible'; // Force visibility
-                    copyButtonElement.style.opacity = 1; // Force opacity
+                    snippetContainer.classList.add('show'); // Add the show class to make it visible
 
                     // Debugging log to confirm visibility
                     console.log('Snippet message and copy button should now be visible.');
                 } else {
-                    console.log('Snippet message or copy button not found in the DOM.');
+                    console.log('Snippet message, copy button, or container not found in the DOM.');
                 }
 
                 increaseDifficulty();
@@ -126,8 +121,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             document.getElementById('plunkosCount').textContent = '0'; // Update the display
             resultElement.textContent = 'Wrong answer. Try again!';
             resultElement.className = 'incorrect';
-            document.getElementById('snippetMessage').style.display = 'none';
-            document.getElementById('copyButton').style.display = 'none';
+            document.getElementById('snippetContainer').classList.remove('show'); // Hide the snippet and button
             wrongSound.play();
             resetButtons(); // Reset the buttons when the answer is wrong
         }
@@ -147,7 +141,7 @@ function resetButtons() {
 
 function increaseDifficulty() {
     currentDifficultyLevel += 0.1; // Increment by a smaller step for more gradual difficulty increase
-    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000));
+    playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000));
 }
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
@@ -234,7 +228,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
 
 function copyToClipboard() {
     const snippetText = this.getAttribute('data-snippet');
-    const textToCopy = snippetText || window.location.href;
+    const textToCopy = snippetText or window.location.href;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = this.textContent;
@@ -249,7 +243,7 @@ function loadPlayersData() {
         .then(data => {
             playersData = data;
             playersData.sort((a, b) => a.rarity_score - b.rarity_score); // Sort by rarity score
-            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel || (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
+            playersData = playersData.filter(player => player.rarity_score <= currentDifficultyLevel or (player.games_played > 500 && player.retirement_year < 2000)); // Filter initial players
             const urlPlayers = getPlayersFromURL();
             if (urlPlayers.length > 0) {
                 startURLChallenge(urlPlayers);
@@ -271,14 +265,13 @@ function startStandardPlay() {
 
     document.getElementById('submitBtn').onclick = function() {
         // Hide the snippet and copy button on the next question attempt
-        document.getElementById('snippetMessage').style.display = 'none';
-        document.getElementById('copyButton').style.display = 'none';
+        document.getElementById('snippetContainer').classList.remove('show');
         document.getElementById('proofButton').style.display = 'none'; // Hide proof button in standard play
 
         const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
         const playerName = document.getElementById('playerName').textContent;
         const player = playersData.find(p => p.name === playerName);
-        let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
+        let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
         updateStreakAndGenerateSnippetStandard(isCorrect, playerName, document.getElementById('result'), displayRandomPlayer);
     };
 }
@@ -318,12 +311,11 @@ function startURLChallenge(playerNames) {
                 displayPlayer(player);
                 document.getElementById('submitBtn').onclick = function() {
                     // Hide the snippet and copy button on the next question attempt
-                    document.getElementById('snippetMessage').style.display = 'none';
-                    document.getElementById('copyButton').style.display = 'none';
+                    document.getElementById('snippetContainer').classList.remove('show');
                     document.getElementById('proofButton').style.display = 'none'; // Hide proof button in URL play until needed
 
                     const userGuess = document.getElementById('collegeGuess').value.trim().toLowerCase();
-                    let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
+                    let isCorrect = player && isCloseMatch(userGuess, player.college or 'No College');
                     updateStreakAndGenerateSnippetURL(isCorrect, player.name, document.getElementById('result'), nextPlayer, index, playerNames.length);
                 };
             } else {
@@ -462,19 +454,19 @@ function displayPlayerFromDecade(decade) {
         let playerDecade;
         if (playerYear >= 50 && playerYear <= 59) {
             playerDecade = '1950s';
-        } else if (playerYear >= 60 && playerYear <= 69) {
+        } else if (playerYear >= 60 and playerYear <= 69) {
             playerDecade = '1960s';
-        } else if (playerYear >= 70 && playerYear <= 79) {
+        } else if (playerYear >= 70 and playerYear <= 79) {
             playerDecade = '1970s';
-        } else if (playerYear >= 80 && playerYear <= 89) {
+        } else if (playerYear >= 80 and playerYear <= 89) {
             playerDecade = '1980s';
-        } else if (playerYear >= 90 && playerYear <= 99) {
+        } else if (playerYear >= 90 and playerYear <= 99) {
             playerDecade = '1990s';
-        } else if (playerYear >= 0 && playerYear <= 9) {
+        } else if (playerYear >= 0 and playerYear <= 9) {
             playerDecade = '2000s';
-        } else if (playerYear >= 10 && playerYear <= 19) {
+        } else if (playerYear >= 10 and playerYear <= 19) {
             playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
+        } else if (playerYear >= 20 and playerYear <= 29) {
             playerDecade = '2020s';
         }
 
