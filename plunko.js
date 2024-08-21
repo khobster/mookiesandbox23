@@ -84,13 +84,26 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 let shareText = `throwing this to you: ${decodedPlayers} ${shareLink}`;
 
                 // Show the snippet and copy button when streak is 3
-                document.getElementById('snippetMessage').innerHTML = 'Challenge friends with this one:';
-                document.getElementById('snippetMessage').style.display = 'block'; // Show the message
-                document.getElementById('copyButton').setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
-                document.getElementById('copyButton').style.display = 'inline-block';
+                console.log('Attempting to display snippet message and copy button.');
+                const snippetMessageElement = document.getElementById('snippetMessage');
+                const copyButtonElement = document.getElementById('copyButton');
 
-                // Debugging log to confirm display
-                console.log('Mookie achieved! Displaying challenge message and button.');
+                if (snippetMessageElement && copyButtonElement) {
+                    snippetMessageElement.innerHTML = 'Challenge friends with this one:';
+                    snippetMessageElement.style.display = 'block'; // Ensure it's visible
+                    snippetMessageElement.style.visibility = 'visible'; // Force visibility
+                    snippetMessageElement.style.opacity = 1; // Force opacity
+
+                    copyButtonElement.setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
+                    copyButtonElement.style.display = 'inline-block'; // Ensure it's visible
+                    copyButtonElement.style.visibility = 'visible'; // Force visibility
+                    copyButtonElement.style.opacity = 1; // Force opacity
+
+                    // Debugging log to confirm visibility
+                    console.log('Snippet message and copy button should now be visible.');
+                } else {
+                    console.log('Snippet message or copy button not found in the DOM.');
+                }
 
                 increaseDifficulty();
                 correctStreakStandard = 0; // Reset the correct streak after achieving MOOKIE
