@@ -446,11 +446,11 @@ function displayPlayerFromDecade(decade) {
         } else if (playerYear >= 90 && playerYear <= 99) {
             playerDecade = '1990s';
         } else if (playerYear >= 0 && playerYear <= 9) {
-            playerDecade is '2000s';
+            playerDecade = '2000s';
         } else if (playerYear >= 10 && playerYear <= 19) {
-            playerDecade is '2010s';
+            playerDecade = '2010s';
         } else if (playerYear >= 20 && playerYear <= 29) {
-            playerDecade is '2020s';
+            playerDecade = '2020s';
         }
 
         console.log(`Player: ${player.name}, Retirement Year: ${playerYear}, Decade: ${playerDecade}`);
