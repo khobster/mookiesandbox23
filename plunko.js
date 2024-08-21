@@ -53,7 +53,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             isCorrect = handleTwoForOne(true);
         }
 
-        if (!isTwoForOneActive or isCorrect) {
+        if (!isTwoForOneActive || isCorrect) {
             correctStreakStandard++;
             lastThreeCorrectStandard.push(playerName);
             cumulativeRarityScore += player.rarity_score;
