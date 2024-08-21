@@ -90,7 +90,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
                 const copyButtonElement = document.getElementById('copyButton');
 
                 if (snippetMessageElement && copyButtonElement && snippetContainer) {
-                    snippetMessageElement.innerHTML = 'Challenge friends with this one:';
+                    snippetMessageElement.innerHTML = 'Challenge friends with this MOOKIE:';
                     copyButtonElement.setAttribute('data-snippet', shareText); // Set the share snippet as data-snippet
                     snippetContainer.classList.add('show'); // Add the show class to make it visible
 
