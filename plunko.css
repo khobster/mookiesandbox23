@@ -260,7 +260,16 @@
     align-items: center;
     justify-content: center;
     margin-top: 10px;
-    display: none; /* Hidden by default */
+    visibility: hidden; /* Initially hidden */
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease-in-out; /* Smooth transition for visibility */
+}
+
+/* Force visibility when showing */
+#snippetContainer.show {
+    visibility: visible;
+    opacity: 1;
+    display: flex; /* Ensure it's flex when visible */
 }
 
 #snippetMessage {
