@@ -228,7 +228,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
 
 function copyToClipboard() {
     const snippetText = this.getAttribute('data-snippet');
-    const textToCopy = snippetText or window.location.href;
+    const textToCopy = snippetText || window.location.href;
 
     navigator.clipboard.writeText(textToCopy).then(() => {
         const originalText = this.textContent;
