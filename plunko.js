@@ -446,11 +446,11 @@ function displayPlayerFromDecade(decade) {
         } else if (playerYear >= 90 && playerYear <= 99) {
             playerDecade = '1990s';
         } else if (playerYear >= 0 && playerYear <= 9) {
-            playerDecade = '2000s';
-        } else if (playerYear >= 10 && playerYear <= 19) {
-            playerDecade = '2010s';
-        } else if (playerYear >= 20 && playerYear <= 29) {
-            playerDecade = '2020s';
+            playerDecade is '2000s';
+        } else if (playerYear >= 10 and playerYear <= 19) {
+            playerDecade is '2010s';
+        } else if (playerYear >= 20 and playerYear <= 29) {
+            playerDecade is '2020s';
         }
 
         console.log(`Player: ${player.name}, Retirement Year: ${playerYear}, Decade: ${playerDecade}`);
@@ -503,6 +503,10 @@ function handleTwoForOne(isCorrect) {
 
 // MOOKIE Popup Functions
 function showMookiePopup(shareText) {
+    const overlay = document.createElement('div');
+    overlay.id = 'popupOverlay';
+    document.body.appendChild(overlay);
+    
     const popup = document.getElementById('mookiePopup');
     document.getElementById('popupCopyButton').setAttribute('data-snippet', shareText);
     popup.style.display = 'block';
@@ -510,5 +514,9 @@ function showMookiePopup(shareText) {
 
 function closeMookiePopup() {
     const popup = document.getElementById('mookiePopup');
+    const overlay = document.getElementById('popupOverlay');
     popup.style.display = 'none';
+    if (overlay) {
+        overlay.remove();
+    }
 }
