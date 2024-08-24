@@ -144,9 +144,9 @@ function increaseDifficulty() {
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
     const bucketScoreElement = document.getElementById('plunkosCounter');
-    
-    // Hide the bucket score when showing the result message
-    if (bucketScoreElement) {
+
+    // Ensure bucket score is hidden in challenge mode
+    if (bucketScoreElement && bucketScoreElement.style.display !== 'none') {
         bucketScoreElement.style.display = 'none';
     }
 
@@ -169,7 +169,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
             resultElement.className = 'correct';
 
             const shareText = `I got all 3 correct in MOOKIE! Check it out: ${window.location.href}`;
-            showMookiePopup(shareText);
+            showMookiePopup(shareText, true);  // Pass true to indicate challenge mode
 
             correctSound.play();
             increaseDifficulty();
@@ -202,11 +202,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
         endURLChallenge(false);
     }
 
-    // Show the bucket score again after the result message is hidden
     setTimeout(() => {
-        if (bucketScoreElement) {
-            bucketScoreElement.style.display = 'block';
-        }
         nextPlayerCallback(playerIndex + 1);
     }, 3000);
 }
@@ -304,13 +300,18 @@ function displayRandomPlayer() {
 
 function displayPlayer(player) {
     const playerNameElement = document.getElementById('playerName');
-    if (playerNameElement) {
+    const playerImageElement = document.getElementById('playerImage');
+    if (playerNameElement && playerImageElement) {
         playerNameElement.textContent = player.name;
+        playerImageElement.src = player.image_url || 'astronaut.jpg'; // Fallback to default image if URL is not available
+        playerImageElement.onerror = function() {
+            this.src = 'astronaut.jpg'; // Fallback if image fails to load
+        };
         document.getElementById('collegeGuess').value = '';
         document.getElementById('result').textContent = '';
         document.getElementById('result').className = '';
     } else {
-        console.error("Player name element not found");
+        console.error("Player name or image element not found");
     }
 }
 
@@ -547,7 +548,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (popupContinueButton) {
         popupContinueButton.addEventListener('click', function () {
             closeMookiePopup();
-            // Keep scores when starting a new game
             startStandardPlay(); 
         });
     }
