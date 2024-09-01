@@ -12,6 +12,73 @@ let highScore = 0;
 const correctSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/bing-bong.mp3');
 const wrongSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/incorrect-answer-for-plunko.mp3');
 
+// Firebase: Submit Score Function
+async function submitScore(player, score) {
+    try {
+        await db.collection("scores").add({
+            player: player,
+            score: score,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        console.log("Score submitted successfully!");
+    } catch (error) {
+        console.error("Error submitting score: ", error);
+    }
+}
+
+// Firebase: Get Top Scores Function
+async function getTopScores() {
+    try {
+        const querySnapshot = await db.collection("scores")
+            .orderBy("score", "desc")
+            .limit(10)
+            .get();
+
+        const scores = [];
+        querySnapshot.forEach((doc) => {
+            scores.push(doc.data());
+        });
+
+        return scores;
+    } catch (error) {
+        console.error("Error retrieving scores: ", error);
+        return [];
+    }
+}
+
+// Function to Update Rank Display
+async function updateRankDisplay(playerScore) {
+    const rankTextElement = document.getElementById('highScore');
+    rankTextElement.textContent = 'Loading rank...';
+
+    // Submit the current score
+    await submitScore('Player Name', playerScore);
+
+    // Get the top scores and determine the rank
+    const topScores = await getTopScores();
+
+    // Sort the scores in descending order
+    topScores.sort((a, b) => b.score - a.score);
+
+    // Find the rank of the user's score
+    let rank = 1;
+    for (let i = 0; i < topScores.length; i++) {
+        if (topScores[i].score > playerScore) {
+            rank++;
+        } else {
+            break;
+        }
+    }
+
+    // Update the rankText with the rank
+    rankTextElement.textContent = `🏆=${Math.round(playerScore)} (#${rank} best today)`;
+
+    // Optionally, shake or flash the rankText to draw attention
+    rankTextElement.classList.add('animated-rank');
+}
+
+// Your existing game functions...
+
 function simplifyString(str) {
     return str.trim().toLowerCase().replace(/university|college|the| /g, '');
 }
@@ -140,6 +207,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
     }, 3000);
 }
 
+// Your existing game functions (updateStreakAndGenerateSnippetURL, resetGameForNextChallenge, resetButtons, showNopePopup, showMookiePopup, closeMookiePopup, etc.)...
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
     const player = playersData.find(p => p.name === playerName);
 
@@ -412,6 +480,12 @@ function startStandardPlay() {
             const player = playersData.find(p => p.name === playerName);
             let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
             updateStreakAndGenerateSnippetStandard(isCorrect, playerName, document.getElementById('result'), displayRandomPlayer);
+            
+            // After determining score, update Firebase
+            if (isCorrect) {
+                cumulativeRarityScore += player.rarity_score;  // Update your score calculation
+                updateRankDisplay(cumulativeRarityScore);
+            }
         };
     }
 }
