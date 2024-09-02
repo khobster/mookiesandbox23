@@ -77,7 +77,7 @@ async function updateRankDisplay(playerScore) {
     rankTextElement.classList.add('animated-rank');
 }
 
-// Game functions...
+// Existing game functions...
 
 function simplifyString(str) {
     return str.trim().toLowerCase().replace(/university|college|the| /g, '');
@@ -206,6 +206,8 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
         nextPlayerCallback();
     }, 3000);
 }
+
+// Existing game functions...
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
     const player = playersData.find(p => p.name === playerName);
