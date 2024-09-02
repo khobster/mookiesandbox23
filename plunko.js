@@ -173,7 +173,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
 
                 showMookiePopup(shareText, false); // Pass false to indicate standard mode
 
-                increaseDifficulty();
                 correctStreakStandard = 0;
                 lastThreeCorrectStandard = [];
                 resetButtons();
@@ -181,6 +180,9 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
             resultElement.className = 'correct';
             correctSound.play();
+
+            // Update the rank display only after updating the score
+            updateRankDisplay(cumulativeRarityScore);
         }
     } else {
         if (isTwoForOneActive) {
@@ -190,7 +192,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
         if (!isTwoForOneActive || !isCorrect) {
             correctStreakStandard = 0;
             lastThreeCorrectStandard = [];
-            cumulativeRarityScore = 0;
+            cumulativeRarityScore = 0;  // Reset only if all other conditions apply
             document.getElementById('plunkosCount').textContent = '0';
             resultElement.textContent = 'Wrong answer. Try again!';
             resultElement.className = 'incorrect';
@@ -481,12 +483,6 @@ function startStandardPlay() {
             const player = playersData.find(p => p.name === playerName);
             let isCorrect = player && isCloseMatch(userGuess, player.college || 'No College');
             updateStreakAndGenerateSnippetStandard(isCorrect, playerName, document.getElementById('result'), displayRandomPlayer);
-            
-            // After determining score, update Firebase
-            if (isCorrect) {
-                cumulativeRarityScore += player.rarity_score;  // Update your score calculation
-                updateRankDisplay(cumulativeRarityScore);
-            }
         };
     }
 }
