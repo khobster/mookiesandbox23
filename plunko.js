@@ -7,7 +7,7 @@ let currentDifficultyLevel = 1;
 let cumulativeRarityScore = 0;
 let isTwoForOneActive = false;
 let twoForOneCounter = 0;
-let highScore = 0;
+let highScore = 0; // High score variable
 
 const correctSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/bing-bong.mp3');
 const wrongSound = new Audio('https://vanillafrosting.agency/wp-content/uploads/2023/11/incorrect-answer-for-plunko.mp3');
@@ -71,19 +71,10 @@ async function updateRankDisplay(playerScore) {
     }
 
     // Update the rankText with the rank
-    rankTextElement.textContent = `🏆=${Math.round(playerScore)} (#${rank} best today)`;
+    rankTextElement.textContent = `🏆=${Math.round(highScore)} (#${rank} best today)`;
 
     // Optionally, shake or flash the rankText to draw attention
     rankTextElement.classList.add('animated-rank');
-}
-
-// Polling Function to Check for Score Updates
-function pollForScoreUpdates() {
-    setInterval(async () => {
-        if (cumulativeRarityScore > 0) {  // Only poll if there is a score to compare
-            await updateRankDisplay(cumulativeRarityScore);
-        }
-    }, 30000); // Check every 30 seconds
 }
 
 // Existing game functions...
@@ -164,7 +155,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             cumulativeRarityScore += player.rarity_score;
 
             if (cumulativeRarityScore > highScore) {
-                highScore = cumulativeRarityScore; // Update high score
+                highScore = cumulativeRarityScore;  // Update high score
                 document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
             }
 
@@ -189,9 +180,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             document.getElementById('plunkosCount').textContent = `${Math.round(cumulativeRarityScore)}`;
             resultElement.className = 'correct';
             correctSound.play();
-
-            // Update the rank display only after updating the score
-            updateRankDisplay(cumulativeRarityScore);
         }
     } else {
         if (isTwoForOneActive) {
@@ -201,7 +189,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
         if (!isTwoForOneActive || !isCorrect) {
             correctStreakStandard = 0;
             lastThreeCorrectStandard = [];
-            cumulativeRarityScore = 0;  // Reset only if all other conditions apply
+            cumulativeRarityScore = 0;  // Reset only the cumulative rarity score
             document.getElementById('plunkosCount').textContent = '0';
             resultElement.textContent = 'Wrong answer. Try again!';
             resultElement.className = 'incorrect';
@@ -217,6 +205,16 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
         nextPlayerCallback();
     }, 3000);
 }
+
+// Function to reset high score display correctly
+function resetGameForNextChallenge() {
+    correctStreakURL = 0;
+    lastThreeCorrectURL = [];
+    cumulativeRarityScore = 0; // Reset only cumulative score
+    resetButtons();
+}
+
+// The rest of your game code...
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
     const player = playersData.find(p => p.name === playerName);
@@ -243,7 +241,7 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
             resetGameForNextChallenge();
 
             if (cumulativeRarityScore > highScore) {
-                highScore = cumulativeRarityScore;
+                highScore = cumulativeRarityScore; // Update high score
                 document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
             }
         } else {
@@ -270,13 +268,6 @@ function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement,
     setTimeout(() => {
         nextPlayerCallback(playerIndex + 1);
     }, 3000);
-}
-
-function resetGameForNextChallenge() {
-    correctStreakURL = 0;
-    lastThreeCorrectURL = [];
-    cumulativeRarityScore = 0;
-    resetButtons();
 }
 
 function resetButtons() {
@@ -798,9 +789,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-
-    // Start polling for score updates after DOM is loaded
-    pollForScoreUpdates();
 });
 
 function displayPlayerFromDecade(decade) {
