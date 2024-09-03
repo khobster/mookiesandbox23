@@ -77,6 +77,15 @@ async function updateRankDisplay(playerScore) {
     rankTextElement.classList.add('animated-rank');
 }
 
+// Polling Function to Check for Score Updates
+function pollForScoreUpdates() {
+    setInterval(async () => {
+        if (cumulativeRarityScore > 0) {  // Only poll if there is a score to compare
+            await updateRankDisplay(cumulativeRarityScore);
+        }
+    }, 30000); // Check every 30 seconds
+}
+
 // Existing game functions...
 
 function simplifyString(str) {
@@ -155,7 +164,7 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             cumulativeRarityScore += player.rarity_score;
 
             if (cumulativeRarityScore > highScore) {
-                highScore = cumulativeRarityScore;
+                highScore = cumulativeRarityScore; // Update high score
                 document.getElementById('highScore').textContent = `🏆=${Math.round(highScore)}`;
             }
 
@@ -208,8 +217,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
         nextPlayerCallback();
     }, 3000);
 }
-
-// Existing game functions...
 
 function updateStreakAndGenerateSnippetURL(isCorrect, playerName, resultElement, nextPlayerCallback, playerIndex, totalPlayers) {
     const player = playersData.find(p => p.name === playerName);
@@ -791,6 +798,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // Start polling for score updates after DOM is loaded
+    pollForScoreUpdates();
 });
 
 function displayPlayerFromDecade(decade) {
