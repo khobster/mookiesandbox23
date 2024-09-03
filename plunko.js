@@ -51,9 +51,6 @@ async function updateRankDisplay(playerScore) {
     const rankTextElement = document.getElementById('highScore');
     rankTextElement.textContent = 'Loading rank...';
 
-    // Submit the current score
-    await submitScore('Player Name', playerScore);
-
     // Get the top scores and determine the rank
     const topScores = await getTopScores();
 
@@ -77,7 +74,149 @@ async function updateRankDisplay(playerScore) {
     rankTextElement.classList.add('animated-rank');
 }
 
-// Existing game functions...
+// Function to start polling for rank updates
+function startPollingForRankUpdates() {
+    setInterval(async () => {
+        await updateRankDisplay(highScore);
+    }, 30000); // Poll every 30 seconds
+}
+
+// Function to initialize the game and start polling
+document.addEventListener('DOMContentLoaded', () => {
+    loadPlayersData(); // Load player data and initialize the game
+
+    startPollingForRankUpdates(); // Start polling for rank updates
+
+    // Other event listeners...
+    const collegeGuess = document.getElementById('collegeGuess');
+    if (collegeGuess) {
+        collegeGuess.addEventListener('input', (e) => {
+            showSuggestions(e.target.value);
+        });
+    }
+
+    const splitItBtn = document.getElementById('splitItBtn');
+    if (splitItBtn) {
+        splitItBtn.addEventListener('click', () => {
+            if (isTwoForOneActive) {
+                return;
+            }
+            const playingTwoForOne = document.getElementById('playingTwoForOne');
+            if (playingTwoForOne) {
+                playingTwoForOne.style.display = 'inline';
+                playingTwoForOne.textContent = 'playing 2 for 1 now';
+            }
+            isTwoForOneActive = true;
+            twoForOneCounter = 0;
+            splitItBtn.disabled = true;
+            splitItBtn.classList.add('disabled');
+            const goFishBtn = document.getElementById('goFishBtn');
+            if (goFishBtn) {
+                goFishBtn.disabled = true;
+                goFishBtn.classList.add('disabled');
+            }
+            displayRandomPlayer();
+        });
+    }
+
+    const goFishBtn = document.getElementById('goFishBtn');
+    if (goFishBtn) {
+        goFishBtn.addEventListener('click', () => {
+            if (isTwoForOneActive) {
+                return;
+            }
+            const decadeDropdownContainer = document.getElementById('decadeDropdownContainer');
+            if (decadeDropdownContainer) {
+                decadeDropdownContainer.style.display = 'block';
+            }
+            goFishBtn.disabled = true;
+            goFishBtn.classList.add('disabled');
+        });
+    }
+
+    const decadeDropdown = document.getElementById('decadeDropdown');
+    if (decadeDropdown) {
+        decadeDropdown.addEventListener('change', (e) => {
+            const selectedDecade = e.target.value;
+            if (selectedDecade) {
+                displayPlayerFromDecade(selectedDecade);
+                const decadeDropdownContainer = document.getElementById('decadeDropdownContainer');
+                if (decadeDropdownContainer) {
+                    decadeDropdownContainer.style.display = 'none';
+                }
+            }
+        });
+    }
+
+    const copyButton = document.getElementById('copyButton');
+    if (copyButton) {
+        copyButton.addEventListener('click', copyToClipboard);
+    }
+
+    const popupCopyButton = document.getElementById('popupCopyButton');
+    if (popupCopyButton) {
+        popupCopyButton.addEventListener('click', copyToClipboard);
+    }
+
+    const proofButton = document.getElementById('proofButton');
+    if (proofButton) {
+        proofButton.addEventListener('click', copyToClipboard);
+    }
+
+    const returnButton = document.getElementById('returnButton');
+    if (returnButton) {
+        returnButton.addEventListener('click', () => {
+            window.location.href = 'https://www.mookie.click';
+        });
+    }
+
+    const tooltip = document.querySelector('.tooltip');
+    if (tooltip) {
+        tooltip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            tooltip.classList.toggle('active');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!tooltip.contains(e.target)) {
+                tooltip.classList.remove('active');
+            }
+        });
+    }
+
+    const popupContinueButton = document.getElementById('popupContinueButton');
+    if (popupContinueButton) {
+        popupContinueButton.addEventListener('click', function () {
+            closeMookiePopup();
+            if (popupContinueButton.classList.contains('standard-mode')) {
+                correctStreakStandard = 0;
+                lastThreeCorrectStandard = [];
+                startStandardPlay();
+            } else {
+                window.location.href = 'https://www.mookie.click';
+            }
+        });
+    }
+
+    const closePopup = document.getElementById('closePopup');
+    if (closePopup) {
+        closePopup.addEventListener('click', function () {
+            closeMookiePopup();
+        });
+    }
+
+    const popupProofButton = document.getElementById('proofButtonPopup');
+    if (popupProofButton) {
+        popupProofButton.addEventListener('click', () => {
+            const correctCount = lastThreeCorrectURL.length;
+            const proofText = generateShareText(true, correctCount, lastThreeCorrectURL.length);
+            navigator.clipboard.writeText(proofText).then(() => {
+                popupProofButton.textContent = 'Receipt Copied!';
+                setTimeout(() => popupProofButton.textContent = 'Grab Your Receipt!', 2000);
+            });
+        });
+    }
+});
 
 function simplifyString(str) {
     return str.trim().toLowerCase().replace(/university|college|the| /g, '');
@@ -195,6 +334,9 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
             resultElement.className = 'incorrect';
             wrongSound.play();
             resetButtons();
+
+            // Ensure rank display remains after a wrong answer
+            updateRankDisplay(highScore);
         }
     }
 
@@ -206,7 +348,6 @@ function updateStreakAndGenerateSnippetStandard(isCorrect, playerName, resultEle
     }, 3000);
 }
 
-// Function to reset high score display correctly
 function resetGameForNextChallenge() {
     correctStreakURL = 0;
     lastThreeCorrectURL = [];
@@ -657,139 +798,6 @@ function showSuggestions(input) {
         });
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadPlayersData();
-
-    const collegeGuess = document.getElementById('collegeGuess');
-    if (collegeGuess) {
-        collegeGuess.addEventListener('input', (e) => {
-            showSuggestions(e.target.value);
-        });
-    }
-
-    const splitItBtn = document.getElementById('splitItBtn');
-    if (splitItBtn) {
-        splitItBtn.addEventListener('click', () => {
-            if (isTwoForOneActive) {
-                return;
-            }
-            const playingTwoForOne = document.getElementById('playingTwoForOne');
-            if (playingTwoForOne) {
-                playingTwoForOne.style.display = 'inline';
-                playingTwoForOne.textContent = 'playing 2 for 1 now';
-            }
-            isTwoForOneActive = true;
-            twoForOneCounter = 0;
-            splitItBtn.disabled = true;
-            splitItBtn.classList.add('disabled');
-            const goFishBtn = document.getElementById('goFishBtn');
-            if (goFishBtn) {
-                goFishBtn.disabled = true;
-                goFishBtn.classList.add('disabled');
-            }
-            displayRandomPlayer();
-        });
-    }
-
-    const goFishBtn = document.getElementById('goFishBtn');
-    if (goFishBtn) {
-        goFishBtn.addEventListener('click', () => {
-            if (isTwoForOneActive) {
-                return;
-            }
-            const decadeDropdownContainer = document.getElementById('decadeDropdownContainer');
-            if (decadeDropdownContainer) {
-                decadeDropdownContainer.style.display = 'block';
-            }
-            goFishBtn.disabled = true;
-            goFishBtn.classList.add('disabled');
-        });
-    }
-
-    const decadeDropdown = document.getElementById('decadeDropdown');
-    if (decadeDropdown) {
-        decadeDropdown.addEventListener('change', (e) => {
-            const selectedDecade = e.target.value;
-            if (selectedDecade) {
-                displayPlayerFromDecade(selectedDecade);
-                const decadeDropdownContainer = document.getElementById('decadeDropdownContainer');
-                if (decadeDropdownContainer) {
-                    decadeDropdownContainer.style.display = 'none';
-                }
-            }
-        });
-    }
-
-    const copyButton = document.getElementById('copyButton');
-    if (copyButton) {
-        copyButton.addEventListener('click', copyToClipboard);
-    }
-
-    const popupCopyButton = document.getElementById('popupCopyButton');
-    if (popupCopyButton) {
-        popupCopyButton.addEventListener('click', copyToClipboard);
-    }
-
-    const proofButton = document.getElementById('proofButton');
-    if (proofButton) {
-        proofButton.addEventListener('click', copyToClipboard);
-    }
-
-    const returnButton = document.getElementById('returnButton');
-    if (returnButton) {
-        returnButton.addEventListener('click', () => {
-            window.location.href = 'https://www.mookie.click';
-        });
-    }
-
-    const tooltip = document.querySelector('.tooltip');
-    if (tooltip) {
-        tooltip.addEventListener('click', (e) => {
-            e.stopPropagation();
-            tooltip.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!tooltip.contains(e.target)) {
-                tooltip.classList.remove('active');
-            }
-        });
-    }
-
-    const popupContinueButton = document.getElementById('popupContinueButton');
-    if (popupContinueButton) {
-        popupContinueButton.addEventListener('click', function () {
-            closeMookiePopup();
-            if (popupContinueButton.classList.contains('standard-mode')) {
-                correctStreakStandard = 0;
-                lastThreeCorrectStandard = [];
-                startStandardPlay();
-            } else {
-                window.location.href = 'https://www.mookie.click';
-            }
-        });
-    }
-
-    const closePopup = document.getElementById('closePopup');
-    if (closePopup) {
-        closePopup.addEventListener('click', function () {
-            closeMookiePopup();
-        });
-    }
-
-    const popupProofButton = document.getElementById('proofButtonPopup');
-    if (popupProofButton) {
-        popupProofButton.addEventListener('click', () => {
-            const correctCount = lastThreeCorrectURL.length;
-            const proofText = generateShareText(true, correctCount, lastThreeCorrectURL.length); // Correct totalPlayers calculation
-            navigator.clipboard.writeText(proofText).then(() => {
-                popupProofButton.textContent = 'Receipt Copied!';
-                setTimeout(() => popupProofButton.textContent = 'Grab Your Receipt!', 2000);
-            });
-        });
-    }
-});
 
 function displayPlayerFromDecade(decade) {
     const playersFromDecade = playersData.filter(player => {
